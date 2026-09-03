@@ -1,29 +1,96 @@
 package ar.edu.unrc.game2048;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Cell Tests")
-class CellTest {
+import org.junit.jupiter.api.Test;
+
+public class CellTest {
+    private Cell cell;
 
     @Test
-    @DisplayName("should create empty cell with value 0")
-    void testEmptyCell() {
-        Cell cell = new Cell(0);
-        assertTrue(cell.isEmpty());
-        assertEquals(0, cell.getValue());
-        assertEquals(Cell.EMPTY, cell);
+    void testNegativeCell() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Cell(-1);
+        });
     }
 
     @Test
-    @DisplayName("should create valid power-of-two cells")
-    void testValidCell() {
+    void testNoPowerCell() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Cell(3);
+        });
+    }
+
+    @Test
+    void testIsEmpty() {
+        boolean resultado = Cell.EMPTY.isEmpty();
+        assertTrue(resultado);
+    }
+
+    @Test
+    void testGetValue() {
+        Cell cell = new Cell(2);
+        int resultado = cell.getValue();
+        assertEquals(resultado, 2);
+    }
+
+    @Test
+    void testCanMergeWith() {
+        Cell cell1 = new Cell(2);
         Cell cell2 = new Cell(2);
-        assertFalse(cell2.isEmpty());
-        assertEquals(2, cell2.getValue());
+        Cell cell3 = new Cell(4);
+
+        assertFalse(cell1.canMergeWith(Cell.EMPTY));
+        assertFalse(Cell.EMPTY.canMergeWith(Cell.EMPTY));
+        assertFalse(Cell.EMPTY.canMergeWith(cell1));
+        assertFalse(cell3.canMergeWith(cell2));
+        assertTrue(cell1.canMergeWith(cell2));
+    }
+
+    @Test
+    void testMergeWith() {
+        Cell cell = new Cell(2);
+        Cell resultado = cell.mergeWith(new Cell(2));
+        assertEquals(resultado, new Cell(4));
+    }
+
+    @Test
+    void testMergeWithException() {
+        cell = new Cell(2);
+        assertThrows(IllegalArgumentException.class, () -> {
+            cell.mergeWith(new Cell(0));
+        });
+    }
+
+    @Test
+    void testEquals() {
+        Cell cell1 = new Cell(2);
+        Cell cell2 = new Cell(2);
+        Cell cell3 = new Cell(4);
+
+        assertEquals(cell1, cell1);
+        assertEquals(cell1, cell2);
+
+        assertNotEquals(cell1, cell3);
+        assertFalse(cell1.equals(null));
+        assertFalse(cell1.equals("null"));
+
+        assertNotEquals(null, cell1);
+        assertNotEquals("Hola", cell1);
+    }
+
+    @Test
+    void testHash() {
+        Cell cell1 = new Cell(2);
+        Cell cell2 = new Cell(2);
+        Cell cell3 = new Cell(4);
+
+        assertEquals(cell1.hashCode(), cell2.hashCode());
+        assertNotEquals(cell2.hashCode(), cell3.hashCode());
     }
 
 }

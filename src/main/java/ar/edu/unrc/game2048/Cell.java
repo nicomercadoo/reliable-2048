@@ -8,7 +8,7 @@ import java.util.Objects;
  * 
  * Representation Invariant:
  * - value >= 0
- * - if value > 0, then value is a power of two 
+ * - if value > 0, then value is a power of two
  * 
  * Immutable class - once created, a Cell cannot change its value.
  */
@@ -18,25 +18,34 @@ public final class Cell {
      * Cell value (0 for empty, or a power of two).
      */
     private final int value;
-    
+
     /**
      * The empty cell singleton (value = 0).
      */
     public static final Cell EMPTY = new Cell(0);
-    
+
     /**
      * Creates a new cell with the given value.
      * 
      * @param value the value of the cell (must be 0 or a power of two)
-     * @throws IllegalArgumentException if the value is negative or not a power of two (except 0)
+     * @throws IllegalArgumentException if the value is negative or not a power of
+     *                                  two (except 0)
      */
     public Cell(int value) {
-        if (value < 0) {
+        if (value < 0 || !powerOfTwo(value)) {
             throw new IllegalArgumentException("Cell value cannot be negative: " + value);
         }
         this.value = value;
     }
-    
+
+    private boolean powerOfTwo(int value) {
+        if (value == 0) {
+            return true;
+        }
+
+        return (value & (value - 1)) == 0;
+    }
+
     /**
      * Checks if this cell is empty.
      * 
@@ -45,7 +54,7 @@ public final class Cell {
     public boolean isEmpty() {
         return value == 0;
     }
-    
+
     /**
      * Gets the numeric value of this cell.
      * 
@@ -54,7 +63,7 @@ public final class Cell {
     public int getValue() {
         return value;
     }
-    
+
     /**
      * Checks if this cell can merge with another cell.
      * Two cells can merge if they are both non-empty and have the same value.
@@ -68,7 +77,7 @@ public final class Cell {
         }
         return this.value == other.value;
     }
-    
+
     /**
      * Creates a new cell that is the result of merging this cell with another.
      * The resulting cell has double the value.
@@ -80,8 +89,7 @@ public final class Cell {
     public Cell mergeWith(Cell other) {
         if (!canMergeWith(other)) {
             throw new IllegalArgumentException(
-                "Cannot merge cells: " + this + " and " + other
-            );
+                    "Cannot merge cells: " + this + " and " + other);
         }
         return new Cell(this.value * 2);
     }
@@ -95,12 +103,14 @@ public final class Cell {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Cell cell = (Cell) o;
         return value == cell.value;
     }
-    
+
     /**
      * Returns the hash code for this cell.
      * Cells with the same value will have the same hash code.
@@ -111,10 +121,11 @@ public final class Cell {
     public int hashCode() {
         return Objects.hash(value);
     }
-    
+
     /**
      * Returns a string representation of this cell.
-     * Empty cells (value = 0) are represented as ".", non-empty cells as their numeric value.
+     * Empty cells (value = 0) are represented as ".", non-empty cells as their
+     * numeric value.
      * 
      * @return "." if the cell is empty, otherwise the numeric value as a string
      */

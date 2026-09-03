@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Board.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">2048-game</a> &gt; <a href="index.source.html" class="el_package">ar.edu.unrc.game2048</a> &gt; <span class="el_source">Board.java</span></div><h1>Board.java</h1><pre class="source lang-java linenums">package ar.edu.unrc.game2048;
+
+import java.util.*;
+
+/**
+ * Represents the 2048 game board.
+ * The board is a square grid of Cells, typically 4x4.
+ *
+ * Representation Invariants:
+ * - grid is a non-null square matrix (rows == cols)
+ * - all cells in the grid are non-null (they may be EMPTY)
+ * - all cell values are valid per Cell invariants
+ * - the board is always in a valid game state
+ *
+ * Thread-safety: This class is not thread-safe.
+ */
+public class Board {
+
+    /**
+     * Board default number of rows/columns (4 x 4)
+     */
+    public static final int DEFAULT_SIZE = 4;
+
+    /**
+     * Default winning value: when board contains this value, the player wins (2048)
+     */
+    public static final int WINNING_VALUE = 2048;
+
+    /**
+     * Board size (i.e., number of rows and columns). Must be &gt; 0.
+     */
+    private final int size;
+
+    /**
+     * Contents of the board: a 2D array of Cells. grid[row][col] represents the
+     * cell at (row, col).
+     */
+    private final Cell[][] grid;
+
+    /**
+     * Game accumulated score.
+     */
+    private int score;
+
+    /**
+     * Creates a new board of the default size (4x4) with two random tiles.
+     */
+    public Board() {
+<span class="fc" id="L49">        this(DEFAULT_SIZE);</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Creates a new board of the specified size with two random tiles.
+     *
+     * @param size the board size (must be &gt; 0)
+     * @throws IllegalArgumentException if size &lt;= 0
+     */
+<span class="fc" id="L58">    public Board(int size) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (size &lt;= 0) {</span>
+<span class="fc" id="L60">            throw new IllegalArgumentException(&quot;Board size must be positive: &quot; + size);</span>
+        }
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (!validSize(size)) {</span>
+<span class="fc" id="L63">            throw new IllegalArgumentException(&quot;Board size must be greater or equals than &quot;</span>
+<span class="fc" id="L64">                + Math.ceil(Math.sqrt(Math.log(WINNING_VALUE) / Math.log(2))));</span>
+        }
+<span class="fc" id="L66">        this.size = size;</span>
+<span class="fc" id="L67">        this.grid = new Cell[size][size];</span>
+<span class="fc" id="L68">        this.score = 0;</span>
+<span class="fc" id="L69">        initializeEmpty();</span>
+<span class="fc" id="L70">        addRandomTile();</span>
+<span class="fc" id="L71">        addRandomTile();</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Copy constructor - creates a deep copy of another board.
+     *
+     * @param other the board to copy
+     */
+<span class="fc" id="L79">    public Board(Board other) {</span>
+<span class="fc" id="L80">        this.size = other.size;</span>
+<span class="fc" id="L81">        this.grid = new Cell[size][size];</span>
+<span class="fc" id="L82">        this.score = other.score;</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (int r = 0; r &lt; size; r++) {</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            for (int c = 0; c &lt; size; c++) {</span>
+<span class="fc" id="L85">                this.grid[r][c] = other.grid[r][c];</span>
+            }
+        }
+<span class="fc" id="L88">    }</span>
+
+    /**
+    * Checks if a value is a valid board size (i.e., a power of two and large enough to reach WINNING_VALUE).
+    *
+    * @param value the value to check
+    * @return true if value is a valid board size, false otherwise
+ */
+    private boolean validSize(int size) {
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (size == 0) {</span>
+<span class="nc" id="L98">            return true;</span>
+        }
+
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        return Math.pow(2, size) &gt;= Math.log(WINNING_VALUE) / Math.log(2);</span>
+    }
+
+    /**
+     * Initializes the board with all EMPTY cells.
+     */
+    private void initializeEmpty() {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        for (int r = 0; r &lt; size; r++) {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            for (int c = 0; c &lt; size; c++) {</span>
+<span class="fc" id="L110">                grid[r][c] = Cell.EMPTY;</span>
+            }
+        }
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Initializes the board with all EMPTY cells.
+     */
+    public void initializeEmptyTest() {
+<span class="fc" id="L119">        initializeEmpty();</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Gets the board size (number of rows/columns).
+     *
+     * @return the board size
+     */
+    public int getSize() {
+<span class="fc" id="L128">        return size;</span>
+    }
+
+    /**
+     * Gets the current score.
+     *
+     * @return the score
+     */
+    public int getScore() {
+<span class="fc" id="L137">        return score;</span>
+    }
+
+    /**
+     * Gets the cell at the specified position.
+     *
+     * @param row the row index (0-based)
+     * @param col the column index (0-based)
+     * @return the cell at the specified position
+     * @throws IndexOutOfBoundsException if row or col is out of bounds
+     */
+    public Cell getCell(int row, int col) {
+<span class="fc" id="L149">        validatePosition(row, col);</span>
+<span class="fc" id="L150">        return grid[row][col];</span>
+    }
+
+    /**
+     * Sets a cell at the specified position.
+     *
+     * @param row  the row index (0-based)
+     * @param col  the column index (0-based)
+     * @param cell the cell to set (must not be null)
+     * @throws IndexOutOfBoundsException if row or col is out of bounds
+     * @throws IllegalArgumentException  if cell is null
+     */
+    public void setCell(int row, int col, Cell cell) {
+<span class="fc" id="L163">        validatePosition(row, col);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (cell == null) {</span>
+<span class="fc" id="L165">            throw new IllegalArgumentException(&quot;Cell cannot be null&quot;);</span>
+        }
+<span class="fc" id="L167">        grid[row][col] = cell;</span>
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * Validates that a position is within bounds.
+     *
+     * @param row the row index
+     * @param col the column index
+     * @throws IndexOutOfBoundsException if the position is out of bounds
+     */
+    private void validatePosition(int row, int col) {
+<span class="fc bfc" id="L178" title="All 8 branches covered.">        if (row &lt; 0 || row &gt;= size || col &lt; 0 || col &gt;= size) {</span>
+<span class="fc" id="L179">            throw new IndexOutOfBoundsException(</span>
+<span class="fc" id="L180">                    String.format(&quot;Position (%d, %d) is out of bounds for board size %d&quot;,</span>
+<span class="fc" id="L181">                            row, col, size));</span>
+        }
+<span class="fc" id="L183">    }</span>
+
+    /**
+     * Gets all empty cells on the board.
+     *
+     * @return a set of positions of all empty cells
+     */
+    public Set&lt;Position&gt; getEmptyPositions() {
+<span class="fc" id="L191">        Set&lt;Position&gt; empty = new HashSet&lt;&gt;();</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        for (int r = 0; r &lt; size; r++) {</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            for (int c = 0; c &lt; size; c++) {</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">                if (grid[r][c].isEmpty()) {</span>
+<span class="fc" id="L195">                    empty.add(new Position(r, c));</span>
+                }
+            }
+        }
+<span class="fc" id="L199">        return empty;</span>
+    }
+
+    /**
+     * Checks if the board has any empty cells.
+     *
+     * @return true if there is at least one empty cell
+     */
+    public boolean hasEmptyCells() {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        return !getEmptyPositions().isEmpty();</span>
+    }
+
+    /**
+     * Checks if the board is in a winning state.
+     * A board is winning if it contains a cell with the WINNING_VALUE (2048).
+     *
+     * @return true if the board contains 2048
+     */
+    public boolean isWinningBoard() {
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        for (int r = 0; r &lt; size; r++) {</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">            for (int c = 0; c &lt; size; c++) {</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                if (grid[r][c].getValue() == WINNING_VALUE) {</span>
+<span class="fc" id="L221">                    return true;</span>
+                }
+            }
+        }
+<span class="fc" id="L225">        return false;</span>
+    }
+
+    /**
+     * Checks if the board is in a losing state (game over).
+     * A board is losing if there are no empty cells AND no adjacent cells
+     * (horizontal or vertical) can be merged.
+     *
+     * @return true if the game is over and the player has lost
+     */
+    public boolean isLosingBoard() {
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (hasEmptyCells()) {</span>
+<span class="fc" id="L237">            return false;</span>
+        }
+
+        // Check for possible merges
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        for (int r = 0; r &lt; size; r++) {</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">            for (int c = 0; c &lt; size; c++) {</span>
+<span class="fc" id="L243">                Cell current = grid[r][c];</span>
+                // Check right neighbor
+<span class="fc bfc" id="L245" title="All 4 branches covered.">                if (c + 1 &lt; size &amp;&amp; current.canMergeWith(grid[r][c + 1])) {</span>
+<span class="fc" id="L246">                    return false;</span>
+                }
+                // Check down neighbor
+<span class="pc bpc" id="L249" title="1 of 4 branches missed.">                if (r + 1 &lt; size &amp;&amp; current.canMergeWith(grid[r + 1][c])) {</span>
+<span class="nc" id="L250">                    return false;</span>
+                }
+            }
+        }
+<span class="fc" id="L254">        return true;</span>
+    }
+
+    /**
+     * Checks if the board is full (no empty cells).
+     *
+     * @return true if there are no empty cells
+     */
+    public boolean isFull() {
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">        return !hasEmptyCells();</span>
+    }
+
+    // ==================== MOVE OPERATIONS (WITH DESIGN PROBLEMS) ====================
+
+    /**
+     * Moves all tiles upward.
+     *
+     * @return true if the board changed, false otherwise
+     */
+    public boolean moveUp() {
+<span class="fc" id="L274">        return move(Direction.UP);</span>
+    }
+
+    public boolean move(Direction direction){
+<span class="fc" id="L278">        Board previous = new Board(this);</span>
+
+<span class="fc" id="L280">        int slowColumnDisplacement = 0;</span>
+<span class="fc" id="L281">        int fastColumnDisplacement = 0;</span>
+<span class="fc" id="L282">        int slowRowDisplacement = 0;</span>
+<span class="fc" id="L283">        int fastRowDisplacement = 0;</span>
+<span class="fc" id="L284">        int rowInit = 0, columnInit = 0;</span>
+<span class="fc" id="L285">        int rowEnd = 0, columnEnd = 0;</span>
+
+
+<span class="fc" id="L288">        int recSlowColumnDisplacement = 0;</span>
+<span class="fc" id="L289">        int recFastColumnDisplacement = 0;</span>
+<span class="fc" id="L290">        int recSlowRowDisplacement = 0;</span>
+<span class="fc" id="L291">        int recFastRowDisplacement = 0;</span>
+<span class="fc" id="L292">        int recRowInit = 0, recColumnInit = 0;</span>
+<span class="fc" id="L293">        int recRowEnd = 0, recColumnEnd = 0;</span>
+<span class="fc" id="L294">        int initGet=0, getDisp=0;</span>
+
+<span class="pc bpc" id="L296" title="1 of 5 branches missed.">        switch (direction) {</span>
+            
+            case UP:
+<span class="fc" id="L299">                slowColumnDisplacement=1;</span>
+<span class="fc" id="L300">                fastColumnDisplacement=0;</span>
+<span class="fc" id="L301">                columnInit=0;</span>
+<span class="fc" id="L302">                columnEnd=size;</span>
+
+<span class="fc" id="L304">                rowInit=0;</span>
+<span class="fc" id="L305">                rowEnd=size;</span>
+<span class="fc" id="L306">                fastRowDisplacement=1;</span>
+<span class="fc" id="L307">                slowRowDisplacement=0;</span>
+
+                //reconstruccion
+<span class="fc" id="L310">                recSlowColumnDisplacement=1;</span>
+<span class="fc" id="L311">                recFastColumnDisplacement=0;</span>
+<span class="fc" id="L312">                recColumnInit=0;</span>
+<span class="fc" id="L313">                recColumnEnd=size;</span>
+
+<span class="fc" id="L315">                recRowInit=0;</span>
+<span class="fc" id="L316">                recRowEnd=size;</span>
+<span class="fc" id="L317">                recFastRowDisplacement=1;</span>
+<span class="fc" id="L318">                recSlowRowDisplacement=0;</span>
+
+<span class="fc" id="L320">                initGet=0;</span>
+<span class="fc" id="L321">                getDisp=1;</span>
+<span class="fc" id="L322">                break;</span>
+            case DOWN:
+<span class="fc" id="L324">                slowColumnDisplacement=1;</span>
+<span class="fc" id="L325">                fastColumnDisplacement=0;</span>
+<span class="fc" id="L326">                columnInit=0;</span>
+<span class="fc" id="L327">                columnEnd=size;</span>
+
+<span class="fc" id="L329">                rowInit=size-1;</span>
+<span class="fc" id="L330">                rowEnd=-1;</span>
+<span class="fc" id="L331">                fastRowDisplacement=-1;</span>
+<span class="fc" id="L332">                slowRowDisplacement=0;</span>
+
+                //reconstruccion
+<span class="fc" id="L335">                recSlowColumnDisplacement=1;</span>
+<span class="fc" id="L336">                recFastColumnDisplacement=0;</span>
+<span class="fc" id="L337">                recColumnInit=0;</span>
+<span class="fc" id="L338">                recColumnEnd=size;</span>
+
+<span class="fc" id="L340">                recRowInit=0;</span>
+<span class="fc" id="L341">                recRowEnd=size;</span>
+<span class="fc" id="L342">                recFastRowDisplacement=1;</span>
+<span class="fc" id="L343">                recSlowRowDisplacement=0;</span>
+
+<span class="fc" id="L345">                initGet=size-1;</span>
+<span class="fc" id="L346">                getDisp=-1;</span>
+<span class="fc" id="L347">                break;</span>
+
+            case LEFT:
+<span class="fc" id="L350">                slowColumnDisplacement=0;</span>
+<span class="fc" id="L351">                fastColumnDisplacement=1;</span>
+<span class="fc" id="L352">                columnInit=0;</span>
+<span class="fc" id="L353">                columnEnd=size;</span>
+
+<span class="fc" id="L355">                rowInit=0;</span>
+<span class="fc" id="L356">                rowEnd=size;</span>
+<span class="fc" id="L357">                fastRowDisplacement=0;</span>
+<span class="fc" id="L358">                slowRowDisplacement=1;</span>
+
+                //reconstruccion
+<span class="fc" id="L361">                recSlowColumnDisplacement=0;</span>
+<span class="fc" id="L362">                recFastColumnDisplacement=1;</span>
+<span class="fc" id="L363">                recColumnInit=0;</span>
+<span class="fc" id="L364">                recColumnEnd=size;</span>
+
+<span class="fc" id="L366">                recRowInit=0;</span>
+<span class="fc" id="L367">                recRowEnd=size;</span>
+<span class="fc" id="L368">                recFastRowDisplacement=0;</span>
+<span class="fc" id="L369">                recSlowRowDisplacement=1;</span>
+
+<span class="fc" id="L371">                initGet=0;</span>
+<span class="fc" id="L372">                getDisp=1;</span>
+<span class="fc" id="L373">                break;</span>
+            case RIGHT:
+<span class="fc" id="L375">                slowColumnDisplacement=0;</span>
+<span class="fc" id="L376">                fastColumnDisplacement=-1;</span>
+<span class="fc" id="L377">                columnInit=size-1;</span>
+<span class="fc" id="L378">                columnEnd=-1;</span>
+
+<span class="fc" id="L380">                rowInit=0;</span>
+<span class="fc" id="L381">                rowEnd=size;</span>
+<span class="fc" id="L382">                fastRowDisplacement=0;</span>
+<span class="fc" id="L383">                slowRowDisplacement=1;</span>
+
+                //reconstruccion
+<span class="fc" id="L386">                recSlowColumnDisplacement = 0;</span>
+<span class="fc" id="L387">                recFastColumnDisplacement = 1;  </span>
+<span class="fc" id="L388">                recColumnInit = 0;              </span>
+<span class="fc" id="L389">                recColumnEnd = size;            </span>
+
+<span class="fc" id="L391">                recRowInit = 0;</span>
+<span class="fc" id="L392">                recRowEnd = size;</span>
+<span class="fc" id="L393">                recFastRowDisplacement = 0;   </span>
+<span class="fc" id="L394">                recSlowRowDisplacement = 1; </span>
+
+<span class="fc" id="L396">                initGet=size-1;</span>
+<span class="fc" id="L397">                getDisp=-1;</span>
+                break;
+        }
+<span class="fc" id="L400">        int i=0,j;</span>
+<span class="fc" id="L401">        int column=columnInit, row=rowInit;</span>
+<span class="fc" id="L402">        int getter=initGet;</span>
+<span class="fc" id="L403">        int columnRec=recColumnInit, rowRec=recRowInit;</span>
+<span class="fc bfc" id="L404" title="All 2 branches covered.">        while (i&lt;size) {</span>
+<span class="fc" id="L405">            List&lt;Cell&gt; cells = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L406">            j=0;</span>
+<span class="fc bfc" id="L407" title="All 2 branches covered.">            while (j&lt;size) {</span>
+<span class="fc" id="L408">                cells.add(grid[row][column]);</span>
+<span class="fc" id="L409">                column+=fastColumnDisplacement;</span>
+<span class="fc" id="L410">                row+=fastRowDisplacement;</span>
+<span class="fc" id="L411">                j++;</span>
+            }
+<span class="fc" id="L413">            List&lt;Cell&gt; nonEmpty = removeEmptyCells(cells);</span>
+<span class="fc" id="L414">            List&lt;Cell&gt; merged = mergeAdjacentEqualsCells(nonEmpty);</span>
+<span class="fc" id="L415">            padWithEmptyCells(merged);</span>
+<span class="fc bfc" id="L416" title="All 2 branches covered.">            if(column==columnEnd){</span>
+<span class="fc" id="L417">                column=columnInit;</span>
+            }
+<span class="fc bfc" id="L419" title="All 2 branches covered.">            if(row==rowEnd){</span>
+<span class="fc" id="L420">                row=rowInit;</span>
+            }
+<span class="fc" id="L422">            j=0;</span>
+<span class="fc" id="L423">            getter=initGet;</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">            while (j&lt;size) {</span>
+<span class="fc" id="L425">                grid[rowRec][columnRec] = merged.get(getter);</span>
+<span class="fc" id="L426">                getter+=getDisp;</span>
+<span class="fc" id="L427">                columnRec+=recFastColumnDisplacement;</span>
+<span class="fc" id="L428">                rowRec+=recFastRowDisplacement;</span>
+<span class="fc" id="L429">                j++;</span>
+            }
+<span class="fc bfc" id="L431" title="All 2 branches covered.">            if(columnRec==recColumnEnd){</span>
+<span class="fc" id="L432">                columnRec=recColumnInit;</span>
+            }
+<span class="fc bfc" id="L434" title="All 2 branches covered.">            if(rowRec==recRowEnd){</span>
+<span class="fc" id="L435">                rowRec=recRowInit;</span>
+            }
+
+<span class="fc" id="L438">            columnRec+=recSlowColumnDisplacement;</span>
+<span class="fc" id="L439">            rowRec+=recSlowRowDisplacement;</span>
+
+<span class="fc" id="L441">            column+=slowColumnDisplacement;</span>
+<span class="fc" id="L442">            row+=slowRowDisplacement;</span>
+<span class="fc" id="L443">            i++;</span>
+<span class="fc" id="L444">        }</span>
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">        boolean moved = !this.equals(previous);</span>
+<span class="pc bpc" id="L446" title="1 of 2 branches missed.">        if (moved) {</span>
+<span class="fc" id="L447">            addRandomTile(); // Add new random tile after successful move</span>
+        }
+<span class="fc" id="L449">        return moved;</span>
+    }
+    /**
+     * Moves all tiles downward.
+     *
+     * @return true if the board changed, false otherwise
+     */
+    public boolean moveDown() {
+<span class="fc" id="L457">        return move(Direction.DOWN);</span>
+    }
+
+    /**
+     * Moves all tiles left.
+     *
+     * @return true if the board changed, false otherwise
+     */
+    public boolean moveLeft() {
+<span class="fc" id="L466">        return move(Direction.LEFT);</span>
+    }
+
+    /**
+     * Moves all tiles right.
+     *
+     * @return true if the board changed, false otherwise
+     */
+    public boolean moveRight() {
+<span class="fc" id="L475">        return move(Direction.RIGHT);</span>
+    }
+
+    /**
+    * Merge adjacent cells in the list that have equal values.
+    * @param nonEmpty a list of non-empty cells
+    * @return a new list of cells after merging
+    */
+	private List&lt;Cell&gt; mergeAdjacentEqualsCells(List&lt;Cell&gt; nonEmpty) {
+<span class="fc" id="L484">		List&lt;Cell&gt; merged = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L485">		int i = 0;</span>
+<span class="fc bfc" id="L486" title="All 2 branches covered.">		while (i &lt; nonEmpty.size()) {</span>
+<span class="fc bfc" id="L487" title="All 2 branches covered.">		    if (i + 1 &lt; nonEmpty.size() &amp;&amp;</span>
+<span class="fc bfc" id="L488" title="All 2 branches covered.">		            nonEmpty.get(i).canMergeWith(nonEmpty.get(i + 1))) {</span>
+<span class="fc" id="L489">		        Cell mergedCell = nonEmpty.get(i).mergeWith(nonEmpty.get(i + 1));</span>
+<span class="fc" id="L490">		        merged.add(mergedCell);</span>
+<span class="fc" id="L491">		        score += mergedCell.getValue();</span>
+<span class="fc" id="L492">		        i += 2;</span>
+<span class="fc" id="L493">		    } else {</span>
+<span class="fc" id="L494">		        merged.add(nonEmpty.get(i));</span>
+<span class="fc" id="L495">		        i++;</span>
+		    }
+		}
+<span class="fc" id="L498">		return merged;</span>
+	}
+
+	/**
+	* Removes all EMPTY cells from the given list of cells.
+    * @param rowList a list of cells
+    * @return a new list containing only non-empty cells
+    */
+	private List&lt;Cell&gt; removeEmptyCells(List&lt;Cell&gt; rowList) {
+<span class="fc" id="L507">		List&lt;Cell&gt; nonEmpty = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">		for (Cell cell : rowList) {</span>
+<span class="fc bfc" id="L509" title="All 2 branches covered.">		    if (!cell.isEmpty()) {</span>
+<span class="fc" id="L510">		        nonEmpty.add(cell);</span>
+		    }
+<span class="fc" id="L512">		}</span>
+<span class="fc" id="L513">		return nonEmpty;</span>
+	}
+
+	/**
+	* Pads the list of merged cells with EMPTY cells until it reaches the board size.
+    * @param merged a list of merged cells
+    */
+	private void padWithEmptyCells(List&lt;Cell&gt; merged) {
+<span class="fc bfc" id="L521" title="All 2 branches covered.">		while (merged.size() &lt; size) {</span>
+<span class="fc" id="L522">		    merged.add(Cell.EMPTY);</span>
+		}
+<span class="fc" id="L524">	}</span>
+
+    // ==================== RANDOM TILE ADDITION (PRIVATE) ====================
+
+    /**
+     * Adds a random tile (2 or 4) to a random empty cell.
+     * This method is private to maintain encapsulation - tiles are only added
+     * during initialization or after successful moves.
+     *
+     * @return true if a tile was added, false if the board was full
+     */
+    private boolean addRandomTile() {
+<span class="fc" id="L536">        Set&lt;Position&gt; empty = getEmptyPositions();</span>
+<span class="pc bpc" id="L537" title="1 of 2 branches missed.">        if (empty.isEmpty()) {</span>
+<span class="nc" id="L538">            return false;</span>
+        }
+
+        // Choose random position
+<span class="fc" id="L542">        int randomIndex = (int) (Math.random() * empty.size());</span>
+<span class="fc" id="L543">        Position pos = empty.stream().skip(randomIndex).findFirst().get();</span>
+
+        // 90% chance of 2, 10% chance of 4 (standard 2048 rules)
+<span class="fc bfc" id="L546" title="All 2 branches covered.">        int value = Math.random() &lt; 0.9 ? 2 : 4;</span>
+<span class="fc" id="L547">        grid[pos.row][pos.col] = new Cell(value);</span>
+
+<span class="fc" id="L549">        return true;</span>
+    }
+
+    // ==================== UTILITY METHODS ====================
+
+    /**
+     * Checks if this board is structurally identical to another.
+     * Uses deep equality including score.
+     *
+     * @param o the object to compare
+     * @return true if the boards are identical
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L563" title="All 2 branches covered.">        if (this == o)</span>
+<span class="fc" id="L564">            return true;</span>
+<span class="fc bfc" id="L565" title="All 4 branches covered.">        if (o == null || getClass() != o.getClass())</span>
+<span class="fc" id="L566">            return false;</span>
+<span class="fc" id="L567">        Board board = (Board) o;</span>
+<span class="fc bfc" id="L568" title="All 4 branches covered.">        return size == board.size &amp;&amp;</span>
+                score == board.score &amp;&amp;
+<span class="fc bfc" id="L570" title="All 2 branches covered.">                Arrays.deepEquals(grid, board.grid);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L575">        return Objects.hash(size, Arrays.deepHashCode(grid), score);</span>
+    }
+
+    /**
+     * Returns a string representation of the board.
+     * The board is displayed in a grid format with the current score.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L584">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L585">        sb.append(&quot;Score: &quot;).append(score).append(&quot;\n&quot;);</span>
+<span class="nc bnc" id="L586" title="All 2 branches missed.">        for (int r = 0; r &lt; size; r++) {</span>
+<span class="nc" id="L587">            sb.append(&quot;+&quot;);</span>
+<span class="nc bnc" id="L588" title="All 2 branches missed.">            for (int c = 0; c &lt; size; c++) {</span>
+<span class="nc" id="L589">                sb.append(&quot;-----+&quot;);</span>
+            }
+<span class="nc" id="L591">            sb.append(&quot;\n|&quot;);</span>
+<span class="nc bnc" id="L592" title="All 2 branches missed.">            for (int c = 0; c &lt; size; c++) {</span>
+<span class="nc bnc" id="L593" title="All 2 branches missed.">                String val = grid[r][c].isEmpty() ? &quot;     &quot; : String.format(&quot;%5d&quot;, grid[r][c].getValue());</span>
+<span class="nc" id="L594">                sb.append(val).append(&quot;|&quot;);</span>
+            }
+<span class="nc" id="L596">            sb.append(&quot;\n&quot;);</span>
+        }
+<span class="nc" id="L598">        sb.append(&quot;+&quot;);</span>
+<span class="nc bnc" id="L599" title="All 2 branches missed.">        for (int c = 0; c &lt; size; c++) {</span>
+<span class="nc" id="L600">            sb.append(&quot;-----+&quot;);</span>
+        }
+<span class="nc" id="L602">        sb.append(&quot;\n&quot;);</span>
+<span class="nc" id="L603">        return sb.toString();</span>
+    }
+
+    // ==================== INNER CLASSES ====================
+
+    /**
+     * Represents a direction on the board.
+     */
+<span class="fc" id="L611">    public enum Direction {</span>
+<span class="fc" id="L612">        UP, DOWN, LEFT, RIGHT</span>
+    }
+
+    /**
+     * Represents a position on the board.
+     */
+    public static class Position {
+        public final int row;
+        public final int col;
+
+<span class="fc" id="L622">        public Position(int row, int col) {</span>
+<span class="fc" id="L623">            this.row = row;</span>
+<span class="fc" id="L624">            this.col = col;</span>
+<span class="fc" id="L625">        }</span>
+
+        @Override
+        public boolean equals(Object o) {
+<span class="fc bfc" id="L629" title="All 2 branches covered.">            if (this == o)</span>
+<span class="fc" id="L630">                return true;</span>
+<span class="fc bfc" id="L631" title="All 4 branches covered.">            if (o == null || getClass() != o.getClass())</span>
+<span class="fc" id="L632">                return false;</span>
+<span class="fc" id="L633">            Position position = (Position) o;</span>
+<span class="pc bpc" id="L634" title="1 of 4 branches missed.">            return row == position.row &amp;&amp; col == position.col;</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="fc" id="L639">            return Objects.hash(row, col);</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L644">            return &quot;(&quot; + row + &quot;, &quot; + col + &quot;)&quot;;</span>
+        }
+    }
+
+    public boolean isEmpty() {
+<span class="fc bfc" id="L649" title="All 2 branches covered.">        for (int i = 0; i &lt; grid.length; i++) {</span>
+<span class="fc bfc" id="L650" title="All 2 branches covered.">            for (int j = 0; j &lt; grid[0].length; j++) {</span>
+<span class="pc bpc" id="L651" title="1 of 2 branches missed.">                if (!grid[i][j].equals(Cell.EMPTY))</span>
+<span class="nc" id="L652">                    return false;</span>
+            }
+        }
+<span class="fc" id="L655">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
