@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class CellTest {
-    private Cell cell;
 
     @Test
     void testNegativeCell() {
@@ -24,6 +23,13 @@ public class CellTest {
         assertThrows(IllegalArgumentException.class, () -> {
             new Cell(3);
         });
+    }
+
+    @Test 
+    void testCellValueZero() {
+        Cell cell = new Cell(0);
+
+        assertEquals(cell.getValue(), 0);
     }
 
     @Test
@@ -61,7 +67,7 @@ public class CellTest {
 
     @Test
     void testMergeWithException() {
-        cell = new Cell(2);
+        Cell cell = new Cell(2);
         assertThrows(IllegalArgumentException.class, () -> {
             cell.mergeWith(new Cell(0));
         });
@@ -93,6 +99,17 @@ public class CellTest {
 
         assertEquals(cell1.hashCode(), cell2.hashCode());
         assertNotEquals(cell2.hashCode(), cell3.hashCode());
+    }
+
+    @Test 
+    void testToStringZero() {
+        assertEquals(Cell.EMPTY.toString(), ".");
+    }
+
+    @Test
+    void testToString() {
+        Cell cell = new Cell(2);
+        assertEquals(cell.toString(), "2");
     }
 
 }

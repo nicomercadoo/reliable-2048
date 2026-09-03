@@ -36,6 +36,20 @@ public class BoardTest {
     }
 
     @Test
+    void testNegativeWinningValue() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Board(4, -1);
+        });
+    }
+
+    @Test
+    void testNoPowerOfTwoWinningValue() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Board(4, 3);
+        });
+    }
+
+    @Test
     void testDefaultBoard() {
         Board board = new Board();
         assertEquals(4, board.getSize());
