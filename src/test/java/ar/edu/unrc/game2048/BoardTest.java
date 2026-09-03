@@ -1,6 +1,7 @@
 package ar.edu.unrc.game2048;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.*;
 
 import java.util.Set;
 

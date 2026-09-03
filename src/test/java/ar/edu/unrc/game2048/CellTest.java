@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 import org.junit.jupiter.api.Test;
 
 public class CellTest {
@@ -64,6 +65,7 @@ public class CellTest {
         assertThrows(IllegalArgumentException.class, () -> {
             cell.mergeWith(new Cell(0));
         });
+        
     }
 
     @Test
