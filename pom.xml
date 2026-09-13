@@ -13,13 +13,103 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.jupiter.version>5.9.2</junit.jupiter.version>
-        <junit.vintage.version>5.9.2</junit.vintage.version>
+        <junit.version>5.10.0</junit.version>
         <evosuiteVersion>1.0.6</evosuiteVersion>
     </properties>
 
+    <dependencies>
+        <!-- JUnit 5 API and Engine -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Optional: AssertJ for fluent assertions -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Randoop -->
+        <dependency>
+            <groupId>com.github.randoop</groupId>
+            <artifactId>randoop</artifactId>
+            <version>4.3.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/randoop-all-4.3.4.jar</systemPath>
+        </dependency>
+
+        <!-- EvoSuite -->
+        <dependency>
+            <groupId>org.evosuite</groupId>
+            <artifactId>evosuite-standalone-runtime</artifactId>
+            <version>${evosuiteVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit Vintage for running JUnit 4 tests -->
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>java-hamcrest</artifactId>
+            <version>2.0.0.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
+            <!-- Plugin para generar el JAR ejecutable -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>ar.edu.unrc.game2048.MainCLI</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            
+            <!-- Surefire -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M9</version>
+                <configuration>
+                    <includes>
+                        <include>**/RegressionTest*.java</include>
+                        <include>**/ErrorTest*.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <!-- JaCoCo -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -40,12 +130,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
-            </plugin>
 
+            <!-- PIT -->
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -76,18 +162,8 @@
                     </outputFormats>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M9</version>
-                <configuration>
-                    <includes>
-                        <include>**/RegressionTest*.java</include>
-                        <include>**/ErrorTest*.java</include>
-                        <include>**/*Test.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
+
+            <!-- EvoSuite Plugin -->
             <plugin>
                 <groupId>org.evosuite.plugins</groupId>
                 <artifactId>evosuite-maven-plugin</artifactId>
@@ -101,53 +177,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.github.randoop</groupId>
-            <artifactId>randoop</artifactId>
-            <version>4.3.4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/randoop-all-4.3.4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.evosuite</groupId>
-            <artifactId>evosuite-standalone-runtime</artifactId>
-            <version>${evosuiteVersion}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- JUnit Vintage for running JUnit 4 tests -->
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>${junit.vintage.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>java-hamcrest</artifactId>
-            <version>2.0.0.0</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
 </project>
