@@ -25,6 +25,7 @@ replay_pid*
 
 # Project specific
 target/
+.scaffolding_list.tmp
 
 # IDE
 .vscode/
