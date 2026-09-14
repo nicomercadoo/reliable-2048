@@ -32,18 +32,10 @@ public final class Cell {
      *                                  two (except 0)
      */
     public Cell(int value) {
-        if (value < 0 || !powerOfTwo(value)) {
+        if (value < 0 || !MathUtils.isPowerOfTwo(value)) {
             throw new IllegalArgumentException("Cell value cannot be negative: " + value);
         }
         this.value = value;
-    }
-
-    private boolean powerOfTwo(int value) {
-        if (value == 0) {
-            return true;
-        }
-
-        return (value & (value - 1)) == 0;
     }
 
     /**

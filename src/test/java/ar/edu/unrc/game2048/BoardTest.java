@@ -40,7 +40,7 @@ public class BoardTest {
     @Test
     void testValidEqualBoardSize() {
         new Board(4, 65536);
-        
+
     }
 
     @Test
@@ -114,7 +114,7 @@ public class BoardTest {
             board.getCell(-1, 0);
         });
         assertThat(exception.getMessage(), containsString("Position (-1, 0) is out of bounds for board size 4"));
-    
+
     }
 
     @Test
@@ -138,61 +138,60 @@ public class BoardTest {
         Board board = new Board();
         board.initializeEmptyTest();
         assertAll("Board.setCell() should throw exceptions for invalid inputs",
-            () -> {
-                IndexOutOfBoundsException exception = assertThrows(
-                    IndexOutOfBoundsException.class, 
-                    () -> board.setCell(-1, 0, new Cell(2)), 
-                    "Setting a cell with negative row index should throw an exception"
-                );
-                assertThat(exception.getMessage(), containsString("Position (-1, 0) is out of bounds for board size " + board.getSize()));
-            },
-            
-            () -> {
-                IndexOutOfBoundsException exception = assertThrows(
-                    IndexOutOfBoundsException.class, 
-                    () -> board.setCell(0, -1, new Cell(2)), 
-                    "Setting a cell with negative column index should throw an exception"
-                );
-                assertThat(exception.getMessage(), containsString("Position (0, -1) is out of bounds for board size " + board.getSize()));
-            },
-            
-            () -> {
-                IndexOutOfBoundsException exception = assertThrows(
-                    IndexOutOfBoundsException.class, 
-                    () -> board.setCell(board.getSize(), 0, new Cell(2)), 
-                    "Setting a cell with row index equal to size should throw an exception"
-                );
-                assertThat(exception.getMessage(), containsString("Position (" + board.getSize() + ", 0) is out of bounds for board size " + board.getSize()));
-            },
-            
-            () -> {
-                IndexOutOfBoundsException exception = assertThrows(
-                    IndexOutOfBoundsException.class, 
-                    () -> board.setCell(0, board.getSize(), new Cell(2)), 
-                    "Setting a cell with column index equal to size should throw an exception"
-                );
-                assertThat(exception.getMessage(), containsString("Position (0, " + board.getSize() + ") is out of bounds for board size " + board.getSize()));
-            },
-            
-            () -> {
-                IndexOutOfBoundsException exception = assertThrows(
-                    IndexOutOfBoundsException.class, 
-                    () -> board.setCell(board.getSize(), board.getSize(), new Cell(2)), 
-                    "Setting a cell with both indexes equal to size should throw an exception"
-                );
-                assertThat(exception.getMessage(), containsString("Position (" + board.getSize() + ", " + board.getSize() + ") is out of bounds for board size " + board.getSize()));
-            },
-            
-            () -> {
-                IllegalArgumentException exception = assertThrows(
-                    IllegalArgumentException.class, 
-                    () -> board.setCell(0, 0, null), 
-                    "Setting a cell with null value should throw an exception"
-                );
-                // Ajusta el texto "Cell cannot be null" según el mensaje real que lances en tu código
-                assertThat(exception.getMessage(), containsString("Cell cannot be null")); 
-            }
-        );
+                () -> {
+                    IndexOutOfBoundsException exception = assertThrows(
+                            IndexOutOfBoundsException.class,
+                            () -> board.setCell(-1, 0, new Cell(2)),
+                            "Setting a cell with negative row index should throw an exception");
+                    assertThat(exception.getMessage(),
+                            containsString("Position (-1, 0) is out of bounds for board size " + board.getSize()));
+                },
+
+                () -> {
+                    IndexOutOfBoundsException exception = assertThrows(
+                            IndexOutOfBoundsException.class,
+                            () -> board.setCell(0, -1, new Cell(2)),
+                            "Setting a cell with negative column index should throw an exception");
+                    assertThat(exception.getMessage(),
+                            containsString("Position (0, -1) is out of bounds for board size " + board.getSize()));
+                },
+
+                () -> {
+                    IndexOutOfBoundsException exception = assertThrows(
+                            IndexOutOfBoundsException.class,
+                            () -> board.setCell(board.getSize(), 0, new Cell(2)),
+                            "Setting a cell with row index equal to size should throw an exception");
+                    assertThat(exception.getMessage(), containsString("Position (" + board.getSize()
+                            + ", 0) is out of bounds for board size " + board.getSize()));
+                },
+
+                () -> {
+                    IndexOutOfBoundsException exception = assertThrows(
+                            IndexOutOfBoundsException.class,
+                            () -> board.setCell(0, board.getSize(), new Cell(2)),
+                            "Setting a cell with column index equal to size should throw an exception");
+                    assertThat(exception.getMessage(), containsString("Position (0, " + board.getSize()
+                            + ") is out of bounds for board size " + board.getSize()));
+                },
+
+                () -> {
+                    IndexOutOfBoundsException exception = assertThrows(
+                            IndexOutOfBoundsException.class,
+                            () -> board.setCell(board.getSize(), board.getSize(), new Cell(2)),
+                            "Setting a cell with both indexes equal to size should throw an exception");
+                    assertThat(exception.getMessage(), containsString("Position (" + board.getSize() + ", "
+                            + board.getSize() + ") is out of bounds for board size " + board.getSize()));
+                },
+
+                () -> {
+                    IllegalArgumentException exception = assertThrows(
+                            IllegalArgumentException.class,
+                            () -> board.setCell(0, 0, null),
+                            "Setting a cell with null value should throw an exception");
+                    // Ajusta el texto "Cell cannot be null" según el mensaje real que lances en tu
+                    // código
+                    assertThat(exception.getMessage(), containsString("Cell cannot be null"));
+                });
     }
 
     @Test
@@ -262,6 +261,7 @@ public class BoardTest {
     @Test
     void testMoveDownSingleCellSlidesToBottom() {
         Board board = new Board();
+        board.setRngStrategy(new MockRNG());
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
@@ -306,6 +306,7 @@ public class BoardTest {
     @Test
     void testMoveRightSingleCellSlidesToRight() {
         Board board = new Board();
+        board.setRngStrategy(new MockRNG());
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
@@ -604,19 +605,18 @@ public class BoardTest {
     }
 
     @Test
-    void testToString(){
+    void testToString() {
         Board board = new Board();
         makeLoserFullBoard(board);
         assertEquals("Score: 0\n" + //
-                        "+-----+-----+-----+-----+\n" + //
-                        "|    4|    2|    4|    2|\n" + //
-                        "+-----+-----+-----+-----+\n" + //
-                        "|    2|    4|    2|    4|\n" + //
-                        "+-----+-----+-----+-----+\n" + //
-                        "|    4|    2|    4|    2|\n" + //
-                        "+-----+-----+-----+-----+\n" + //
-                        "|    2|    4|    2|    4|\n" + //
-                        "+-----+-----+-----+-----+\n"
-                        ,board.toString());
+                "+-----+-----+-----+-----+\n" + //
+                "|    4|    2|    4|    2|\n" + //
+                "+-----+-----+-----+-----+\n" + //
+                "|    2|    4|    2|    4|\n" + //
+                "+-----+-----+-----+-----+\n" + //
+                "|    4|    2|    4|    2|\n" + //
+                "+-----+-----+-----+-----+\n" + //
+                "|    2|    4|    2|    4|\n" + //
+                "+-----+-----+-----+-----+\n", board.toString());
     }
 }

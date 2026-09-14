@@ -83,7 +83,7 @@ public class Board {
         if (winningValue <= 0) {
             throw new IllegalArgumentException("Winning value must be positive and not 0: " + winningValue);
         }
-        if (!powerOfTwo(winningValue)) {
+        if (!MathUtils.isPowerOfTwo(winningValue)) {
             throw new IllegalArgumentException("Winning value must be a power of two: " + winningValue);
         }
 
@@ -100,20 +100,6 @@ public class Board {
         initializeEmpty();
         addRandomTile();
         addRandomTile();
-    }
-
-    /**
-     * analizes if a integer numb is a power of two with bit operators
-     *
-     * @param value
-     * @return true if value is a power of two
-     */
-    private boolean powerOfTwo(int value) {
-        if (value == 0) {
-            return true;
-        }
-
-        return (value & (value - 1)) == 0;
     }
 
     /**
