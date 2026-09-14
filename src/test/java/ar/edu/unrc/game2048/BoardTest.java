@@ -45,9 +45,11 @@ public class BoardTest {
 
     @Test
     void testInvalidBoardSizeZero() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Board(0);
         });
+
+        assertTrue(exception.getMessage().contains("Board size must be positive"));
     }
 
     @Test
@@ -58,17 +60,20 @@ public class BoardTest {
     }
 
     @Test
-    void testNegativeWinningValue() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Board(4, -1);
+    void testWinningValueZero() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Board(4, 0);
         });
+
+        assertTrue(exception.getMessage().contains("must be positive and not 0"));
     }
 
     @Test
-    void testWinningValueZero() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Board(4, 0);
+    void testNegativeWinningValue() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Board(4, -1);
         });
+        assertTrue(exception.getMessage().contains("must be positive and not 0"));
     }
 
     @Test
@@ -234,8 +239,11 @@ public class BoardTest {
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
+
+        Board before = new Board(board);
+
         assertFalse(board.moveUp());
-        assertEquals(cell, board.getCell(0, 0));
+        assertEquals(before, board);
     }
 
     @Test
@@ -276,8 +284,11 @@ public class BoardTest {
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(3, 0, cell);
+
+        Board before = new Board(board);
+
         assertFalse(board.moveDown());
-        assertEquals(cell, board.getCell(3, 0));
+        assertEquals(before, board);
     }
 
     @Test
@@ -321,8 +332,11 @@ public class BoardTest {
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 3, cell);
+
+        Board before = new Board(board);
+
         assertFalse(board.moveRight());
-        assertEquals(cell, board.getCell(0, 3));
+        assertEquals(before, board);
     }
 
     @Test
@@ -367,8 +381,11 @@ public class BoardTest {
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
+
+        Board before = new Board(board);
+
         assertFalse(board.moveLeft());
-        assertEquals(cell, board.getCell(0, 0));
+        assertEquals(before, board);
     }
 
     @Test

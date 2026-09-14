@@ -127,10 +127,6 @@ public class Board {
      * @return true if value is a valid board size, false otherwise
      */
     private boolean validSize(int size) {
-        if (size == 0) {
-            return true;
-        }
-
         return Math.pow(size, 2) >= Math.log(winningValue) / Math.log(2);
     }
 
