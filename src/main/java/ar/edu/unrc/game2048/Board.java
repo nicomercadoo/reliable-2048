@@ -48,6 +48,8 @@ public class Board {
      */
     private int score;
 
+    private RNGStrategy rngStrategy = new MockRNG();
+
     /**
      * Creates a new board of the default size (4x4), default winning value and with
      * two random tiles.
@@ -59,7 +61,7 @@ public class Board {
     /**
      * Creates a new board with a specified size, default winning value and with two
      * random tiles.
-     * 
+     *
      * @param size
      */
     public Board(int size) {
@@ -102,7 +104,7 @@ public class Board {
 
     /**
      * analizes if a integer numb is a power of two with bit operators
-     * 
+     *
      * @param value
      * @return true if value is a power of two
      */
@@ -155,6 +157,15 @@ public class Board {
                 grid[r][c] = Cell.EMPTY;
             }
         }
+    }
+
+    /**
+     * Sets the random number generator strategy.
+     *
+     * @param rngStrategy the new random number generator strategy
+     */
+    public void setRngStrategy(RNGStrategy rngStrategy) {
+        this.rngStrategy = rngStrategy;
     }
 
     /**
@@ -445,7 +456,7 @@ public class Board {
 
     /**
      * Merge adjacent cells in the list that have equal values.
-     * 
+     *
      * @param nonEmpty a list of non-empty cells
      * @return a new list of cells after merging
      */
@@ -469,7 +480,7 @@ public class Board {
 
     /**
      * Removes all EMPTY cells from the given list of cells.
-     * 
+     *
      * @param rowList a list of cells
      * @return a new list containing only non-empty cells
      */
@@ -486,7 +497,7 @@ public class Board {
     /**
      * Pads the list of merged cells with EMPTY cells until it reaches the board
      * size.
-     * 
+     *
      * @param merged a list of merged cells
      */
     private void padWithEmptyCells(List<Cell> merged) {
@@ -511,11 +522,11 @@ public class Board {
         }
 
         // Choose random position
-        int randomIndex = (int) (Math.random() * empty.size());
+        int randomIndex = (int) (rngStrategy.getRandom() * empty.size());
         Position pos = empty.stream().skip(randomIndex).findFirst().get();
 
         // 90% chance of 2, 10% chance of 4 (standard 2048 rules)
-        int value = Math.random() < 0.9 ? 2 : 4;
+        int value = rngStrategy.getRandom() < 0.9 ? 2 : 4;
         grid[pos.row][pos.col] = new Cell(value);
 
         return true;

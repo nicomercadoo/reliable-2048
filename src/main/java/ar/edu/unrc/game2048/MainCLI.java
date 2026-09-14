@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 /**
  * Command-line interface for the 2048 game.
- * 
+ *
  * This class handles user input and displays the board state.
  * It demonstrates how to use the Board class and its methods.
  */
@@ -30,6 +30,7 @@ public class MainCLI {
                 : Integer.parseInt(winningValueInput);
 
         this.board = new Board(size, winningValue);
+        board.setRngStrategy(new RNG());
     }
 
     /**
