@@ -32,7 +32,7 @@ public final class Cell {
      *                                  two (except 0)
      */
     public Cell(int value) {
-        if (value < 0 || !MathUtils.isPowerOfTwo(value)) {
+        if (value < 0 || (value != 0 && !MathUtils.isPowerOfTwo(value))) {
             throw new IllegalArgumentException("Cell value cannot be negative: " + value);
         }
         this.value = value;
