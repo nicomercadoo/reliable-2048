@@ -163,8 +163,9 @@
                 </configuration>
             </plugin>
 
+            <!-- Movido a Profiles -->
             <!-- EvoSuite Plugin -->
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.evosuite.plugins</groupId>
                 <artifactId>evosuite-maven-plugin</artifactId>
                 <version>${evosuiteVersion}</version>
@@ -174,7 +175,33 @@
                         <phase> process-test-classes </phase>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>evosuite</id>
+            <properties>
+                <maven.compiler.source>1.8</maven.compiler.source>
+                <maven.compiler.target>1.8</maven.compiler.target>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- EvoSuite Plugin -->
+                    <plugin>
+                        <groupId>org.evosuite.plugins</groupId>
+                        <artifactId>evosuite-maven-plugin</artifactId>
+                        <version>${evosuiteVersion}</version>
+                        <executions>
+                            <execution>
+                                <goals> <goal> prepare </goal> </goals>
+                                <phase> process-test-classes </phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
