@@ -8,6 +8,11 @@ public class MockRNG implements RNGStrategy {
         this.values = new double[]{0.5};
         this.index = 0;
     }
+    
+    public MockRNG(double val) {
+        this.values = new double[]{val};
+        this.index = 0;
+    }
 
     @Override
     public double getRandom() {
@@ -15,4 +20,5 @@ public class MockRNG implements RNGStrategy {
         index = (index + 1) % values.length;
         return value;
     }
+
 }

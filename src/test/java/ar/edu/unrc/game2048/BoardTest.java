@@ -130,6 +130,12 @@ public class BoardTest {
     }
 
     @Test
+    void testFalseIsEmpty() {
+        Board board = new Board(4);
+        assertFalse(board.isEmpty());
+    }
+
+    @Test
     void testSetCell() {
         Board board = new Board();
         board.initializeEmptyTest();
@@ -204,6 +210,18 @@ public class BoardTest {
         Board board = new Board();
         makeLoserFullBoard(board);
         assertTrue(board.isFull());
+    }
+
+    @Test
+    void testCorrectCellGeneration() {
+        Board board = new Board();
+        board.initializeEmptyTest();
+
+        board.setRngStrategy(new MockRNG(0.9));
+        board.setCell(0, 0, new Cell(2));
+
+        board.moveDown();
+        assertEquals(board.getCell(2, 0), new Cell(4));
     }
 
     @Test
@@ -635,5 +653,12 @@ public class BoardTest {
                 "+-----+-----+-----+-----+\n" + //
                 "|    2|    4|    2|    4|\n" + //
                 "+-----+-----+-----+-----+\n", board.toString());
+    }
+
+    @Test
+    void testPositionToString() {
+        Board.Position position = new Board.Position(0, 0);
+
+        assertEquals(position.toString(), "(0, 0)");
     }
 }
