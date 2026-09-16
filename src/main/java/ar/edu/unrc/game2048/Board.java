@@ -301,8 +301,7 @@ public class Board {
         return !hasEmptyCells();
     }
 
-    // ==================== MOVE OPERATIONS (WITH DESIGN PROBLEMS)
-    // ====================
+    // ==================== MOVE OPERATIONS (WITH DESIGN PROBLEMS) ====================
 
     /**
      * Moves all tiles upward.
@@ -567,6 +566,51 @@ public class Board {
         }
         sb.append("\n");
         return sb.toString();
+    }
+
+    // ==================== REPRESENTATION CORRECTNESS METHODS ====================
+
+    /**
+    * Representation invariant check for the Board class.
+    * This method checks that the board's internal state is consistent
+    * and valid according to the representation invariants.
+    * Specifically, it checks:
+    *   <ul>
+    *       <li> the {@link #size} is positive, </li>
+    *       <li> the {@link #size} is valid for the winning value, </li>
+    *       <li> the {@link #winningValue} is a power of two, </li>
+    *       <li> the {@link #grid} is non-null. </li>
+    *       <li> the {@link #grid} is a square matrix (rows == cols), </li>
+    *       <li> all cells in the {@link #grid} are non-null, </li>
+    *       <li> all cell values are valid per {@link Cell} invariants. </li>
+    *   </ul>
+    *
+    * @return <code>true</code> if the representation invariants hold, false otherwise.
+    */
+    public boolean repOK() {
+        if (size <= 0) {
+            return false;
+        }
+        if (!validSize(size)) {
+            return false;
+        }
+        if (winningValue <= 0 || !MathUtils.isPowerOfTwo(winningValue)) {
+            return false;
+        }
+        if (grid == null || grid.length != size) {
+            return false;
+        }
+        for (int r = 0; r < size; r++) {
+            if (grid[r] == null || grid[r].length != size) {
+                return false;
+            }
+            for (int c = 0; c < size; c++) {
+                if (grid[r][c] == null || !grid[r][c].repOK()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // ==================== INNER CLASSES ====================
