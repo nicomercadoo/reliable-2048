@@ -1,5 +1,7 @@
 #!/bin/bash
 
+omit_method_file="omit-methods.regex"
+
 # 1. Validar que se haya pasado al menos una clase como argumento
 if [[ "$#" -eq 0 ]]; then
     echo "Error: Debes proporcionar al menos una clase."
@@ -27,7 +29,8 @@ for clase in "$@"; do
         --junit-output-dir=src/test/java \
         --junit-package-name=randoopTests \
         --regression-test-basename="$nombre_regresion" \
-        --error-test-basename="$nombre_error"
+        --error-test-basename="$nombre_error" \
+        --omit-methods-file="$omit_method_file"
 
 done
 
