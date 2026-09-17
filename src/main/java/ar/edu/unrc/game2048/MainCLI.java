@@ -30,7 +30,6 @@ public class MainCLI {
                 : Integer.parseInt(winningValueInput);
 
         this.board = new Board(size, winningValue);
-        board.setRngStrategy(new RNG());
     }
 
     /**

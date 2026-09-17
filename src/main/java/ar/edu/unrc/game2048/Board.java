@@ -48,7 +48,7 @@ public class Board {
      */
     private int score;
 
-    private RNGStrategy rngStrategy = new MockRNG();
+    private RNGStrategy rngStrategy = new RNG();
 
     /**
      * Creates a new board of the default size (4x4), default winning value and with
@@ -103,6 +103,16 @@ public class Board {
     }
 
     /**
+    * 
+    * @param size
+    * @return
+    */
+    public Board(MockRNG rng) {
+        this();
+        this.rngStrategy = rng;
+    }
+    
+    /**
      * Copy constructor - creates a deep copy of another board.
      *
      * @param other the board to copy
@@ -119,6 +129,7 @@ public class Board {
         }
     }
 
+    
     /**
      * Checks if a value is a valid board size (i.e., a power of two and large
      * enough to reach WINNING_VALUE).
