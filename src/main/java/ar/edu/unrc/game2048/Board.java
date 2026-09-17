@@ -50,14 +50,14 @@ public class Board {
      */
     private int score;
 
-    private RNGStrategy rngStrategy = new RNG();
+    private RNGStrategy rngStrategy;
 
     /**
      * Creates a new board of the default size (4x4), default winning value and with
      * two random tiles.
      */
     public Board() {
-        this(DEFAULT_SIZE, DEFAULT_WINNING_VALUE);
+        this(new RNG(), DEFAULT_SIZE, DEFAULT_WINNING_VALUE);
     }
 
     /**
@@ -67,7 +67,15 @@ public class Board {
      * @param size
      */
     public Board(int size) {
-        this(size, DEFAULT_WINNING_VALUE);
+        this(new RNG(), size, DEFAULT_WINNING_VALUE);
+    }
+
+    public Board(int size, int winningValue) {
+        this(new RNG(), size, winningValue);
+    }
+
+    public Board(MockRNG mock) {
+        this(mock, DEFAULT_SIZE, DEFAULT_WINNING_VALUE);
     }
 
     /**
@@ -78,7 +86,7 @@ public class Board {
      * @param winningValue winning value of the game
      * @throws IllegalArgumentException if size <= 0
      */
-    public Board(int size, int winningValue) {
+    public Board(RNGStrategy rng, int size, int winningValue) {
         if (size <= 0) {
             throw new IllegalArgumentException("Board size must be positive: " + size);
         }
@@ -96,22 +104,13 @@ public class Board {
                     + Math.ceil(Math.sqrt(Math.log(winningValue) / Math.log(2))));
         }
 
+        this.rngStrategy = rng;
         this.size = size;
         this.grid = new Cell[size][size];
         this.score = 0;
         initializeEmpty();
         addRandomTile();
         addRandomTile();
-    }
-
-    /**
-    *
-    * @param size
-    * @return
-    */
-    public Board(MockRNG rng) {
-        this();
-        this.rngStrategy = rng;
     }
 
     /**

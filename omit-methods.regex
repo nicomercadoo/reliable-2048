@@ -1,4 +1,6 @@
 ar\.edu\.unrc\.game2048\.Board\(\)
 ar\.edu\.unrc\.game2048\.Board\(int\)
 ar\.edu\.unrc\.game2048\.Board\(int,int\)
+ar\.edu\.unrc\.game2048\.Board\(RNGStrategy,int,int\)
+ar\.edu\.unrc\.game2048\.RNGStrategy
 ar\.edu\.unrc\.game2048\.Board\.setRngStrategy
