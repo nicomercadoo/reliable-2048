@@ -214,10 +214,10 @@ public class BoardTest {
 
     @Test
     void testCorrectCellGeneration() {
-        Board board = new Board();
+        Board board = new Board(new MockRNG(0.9));
         board.initializeEmptyTest();
 
-        board.setRngStrategy(new MockRNG(0.9));
+        // board.setRngStrategy(new MockRNG(0.9));
         board.setCell(0, 0, new Cell(2));
 
         board.moveDown();
@@ -286,8 +286,8 @@ public class BoardTest {
 
     @Test
     void testMoveDownSingleCellSlidesToBottom() {
-        Board board = new Board();
-        board.setRngStrategy(new MockRNG());
+        Board board = new Board(new MockRNG());
+        // board.setRngStrategy(new MockRNG());
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
@@ -334,8 +334,8 @@ public class BoardTest {
 
     @Test
     void testMoveRightSingleCellSlidesToRight() {
-        Board board = new Board();
-        board.setRngStrategy(new MockRNG());
+        Board board = new Board(new MockRNG());
+        // board.setRngStrategy(new MockRNG());
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
