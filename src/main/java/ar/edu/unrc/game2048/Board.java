@@ -2,6 +2,8 @@ package ar.edu.unrc.game2048;
 
 import java.util.*;
 
+import randoop.CheckRep;
+
 /**
  * Represents the 2048 game board.
  * The board is a square grid of Cells, typically 4x4.
@@ -103,7 +105,7 @@ public class Board {
     }
 
     /**
-    * 
+    *
     * @param size
     * @return
     */
@@ -111,7 +113,7 @@ public class Board {
         this();
         this.rngStrategy = rng;
     }
-    
+
     /**
      * Copy constructor - creates a deep copy of another board.
      *
@@ -129,7 +131,7 @@ public class Board {
         }
     }
 
-    
+
     /**
      * Checks if a value is a valid board size (i.e., a power of two and large
      * enough to reach WINNING_VALUE).
@@ -598,6 +600,7 @@ public class Board {
     *
     * @return <code>true</code> if the representation invariants hold, false otherwise.
     */
+    @CheckRep
     public boolean repOK() {
         if (size <= 0) {
             return false;
