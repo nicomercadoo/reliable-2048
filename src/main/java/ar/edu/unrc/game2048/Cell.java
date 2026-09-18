@@ -94,7 +94,7 @@ public final class Cell {
             return false;
         }
 
-        if (!MathUtils.isPowerOfTwo(value)) {
+        if (value > 0 && !MathUtils.isPowerOfTwo(value)) {
             return false;
         }
 
