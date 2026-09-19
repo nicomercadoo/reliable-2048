@@ -123,6 +123,7 @@ public class Board {
         this.size = other.size;
         this.grid = new Cell[size][size];
         this.score = other.score;
+        this.rngStrategy = other.rngStrategy;
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 this.grid[r][c] = other.grid[r][c];
