@@ -9,7 +9,24 @@ if [[ "$#" -eq 0 ]]; then
     exit 1
 fi
 
-# 2. Acumular las clases en una variable para pasarlas juntas a Randoop
+
+# 2. Re compilar el proyecto con Maven antes de generar los tests
+echo ""
+echo "------------------------------------------------------------"
+echo "  Recompilando el proyecto con Maven..."
+echo "------------------------------------------------------------"
+
+mvn clean compile
+
+if [[ $? -ne 0 ]]; then
+    echo ""
+    echo "-------------------------------------------------------------"
+    echo "Error: La compilación de Maven falló. Asegúrate de que el proyecto compile correctamente antes de generar tests."
+    echo "-------------------------------------------------------------"
+    exit 1
+fi
+
+# 3. Acumular las clases en una variable para pasarlas juntas a Randoop
 TESTCLASSES=""
 for clase in "$@"; do
     TESTCLASSES="$TESTCLASSES --testclass=$clase"
@@ -18,11 +35,12 @@ done
 # Calcular el límite de tiempo total (10 segundos por cada clase recibida)
 TIEMPO_TOTAL=$(( 10 * $# ))
 
+echo ""
 echo "------------------------------------------------------------"
-echo "Generando tests para $# clases ($TIEMPO_TOTAL segundos)"
+echo "  Generando tests para $# clases... ($TIEMPO_TOTAL segundos)"
 echo "------------------------------------------------------------"
 
-# 3. Ejecutar Randoop UNA sola vez fuera del bucle
+# 4. Ejecutar Randoop UNA sola vez fuera del bucle
 java -cp "lib/randoop-all-4.3.4.jar:target/classes" randoop.main.Main gentests \
     $TESTCLASSES \
     --time-limit=$TIEMPO_TOTAL \
@@ -30,8 +48,17 @@ java -cp "lib/randoop-all-4.3.4.jar:target/classes" randoop.main.Main gentests \
     --junit-package-name=randoopTests \
     --regression-test-basename="RegressionTest" \
     --error-test-basename="ErrorTest" \
-    --omit-methods-file="$omit_method_file" \
-    --print-non-compiling-file
+    --omit-methods-file="$omit_method_file"
 
-echo "------------------------------------------------------------"
-echo "Generación de tests finalizada exitosamente."
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "------------------------------------------------------------"
+    echo "Error: La generación de tests con Randoop falló."
+    echo "------------------------------------------------------------"
+    exit 1
+else
+    echo ""
+    echo "------------------------------------------------------------"
+    echo "  Generación de tests completada para $# clases."
+    echo "------------------------------------------------------------"
+fi
