@@ -154,14 +154,6 @@ public class Board {
         }
     }
 
-    /**
-     * Sets the random number generator strategy.
-     *
-     * @param rngStrategy the new random number generator strategy
-     */
-    public void setRngStrategy(RNGStrategy rngStrategy) {
-        this.rngStrategy = rngStrategy;
-    }
 
     /**
      * Initializes the board with all EMPTY cells.
@@ -629,12 +621,7 @@ public class Board {
 
     // ==================== INNER CLASSES ====================
 
-    /**
-     * Represents a direction on the board.
-     */
-    public enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
+    
 
     /**
      * Represents a position on the board.

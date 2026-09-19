@@ -28,7 +28,7 @@ public class CellTest {
     @Test 
     void testCellValueZero() {
         Cell cell = new Cell(0);
-
+        assertTrue(cell.repOK());
         assertEquals(cell.getValue(), 0);
     }
 
@@ -42,6 +42,7 @@ public class CellTest {
     void testGetValue() {
         Cell cell = new Cell(2);
         int resultado = cell.getValue();
+        assertTrue(cell.repOK());
         assertEquals(resultado, 2);
     }
 
@@ -110,6 +111,12 @@ public class CellTest {
     void testToString() {
         Cell cell = new Cell(2);
         assertEquals(cell.toString(), "2");
+    }
+
+    @Test
+    void testRepOK(){
+        Cell cell = new Cell(1073741824);
+        assertTrue(cell.repOK());
     }
 
 }

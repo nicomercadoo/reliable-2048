@@ -272,6 +272,7 @@ public class BoardTest {
         board.setCell(2, 0, new Cell(2));
         board.moveUp();
         assertEquals(4, board.getCell(0, 0).getValue());
+        assertTrue(board.repOK());
     }
 
     @Test
@@ -307,6 +308,7 @@ public class BoardTest {
 
         assertFalse(board.moveDown());
         assertEquals(before, board);
+        assertTrue(board.repOK());
     }
 
     @Test
@@ -317,6 +319,7 @@ public class BoardTest {
         board.setCell(2, 0, new Cell(4));
         board.moveDown();
         assertEquals(8, board.getCell(3, 0).getValue());
+        assertTrue(board.repOK());
     }
 
     @Test
@@ -368,6 +371,7 @@ public class BoardTest {
         board.moveRight();
         assertEquals(8, board.getCell(1, 3).getValue());
         assertEquals(cell, board.getCell(1, 2));
+        assertTrue(board.repOK());
     }
 
     @Test
@@ -391,6 +395,7 @@ public class BoardTest {
         board.setCell(0, 3, cell);
         assertTrue(board.moveLeft());
         assertEquals(cell, board.getCell(0, 0));
+        assertTrue(board.repOK());
     }
 
     @Test
@@ -543,6 +548,12 @@ public class BoardTest {
     }
 
     @Test
+    void testIsNotFullBoard() {
+        Board board = new Board();
+        assertFalse(board.isFull());
+    }
+
+    @Test
     void testIsWinningBoardReturnsFalse() {
         Board board = new Board();
         makeLoserFullBoard(board);
@@ -569,14 +580,26 @@ public class BoardTest {
 
         Board boardB = new Board(4);
         makeLoserFullBoard(boardB);
-        boardB.setCell(0, 0, new Cell(8));
+        boardB.setCell(0, 0, new Cell(2));
 
         Board boardC = new Board(8);
         makeLoserFullBoard(boardC);
 
+        Board boardD = new Board(4);
+        makeLoserFullBoard(boardD);
+        boardD.setCell(0, 0, new Cell(2));
+        boardD.moveLeft();
+        boardD.setCell(0, 0, new Cell(2));
+        boardD.setCell(1, 0, new Cell(2));
+
+        Board boardE = new Board(4,1024);
+        makeLoserFullBoard(boardE);
+
         assertAll("Board.equals() should return false",
                 () -> assertNotEquals(boardA, boardB, "Board A is different to Board B (it has different Cell's)"),
+                () -> assertNotEquals(boardA, boardE, "Board A is different to Board E (it has different WinningValue)"),
                 () -> assertNotEquals(boardA, boardC, "Board A is different to Board C (it has different size)"),
+                () -> assertNotEquals(boardB, boardD, "Board B is different to Board D (it has different score)"),
                 () -> assertNotEquals(boardA, null, "Board A compared with null"),
                 () -> assertNotEquals(boardA, "Some other object", "Board A compared with a non Board object"));
     }
@@ -616,10 +639,14 @@ public class BoardTest {
     void testPositionEqualsShouldNotBeTrue() {
         Board.Position pos1 = new Board.Position(0, 0);
         Board.Position pos2 = new Board.Position(1, 1);
+        Board.Position pos3 = new Board.Position(0, 1);
+        Board.Position pos4 = new Board.Position(1, 0);
 
         assertAll("Board.Position.equals() should be false",
                 () -> assertNotEquals(pos1, null, "pos1 compared with pos2"),
                 () -> assertNotEquals(pos1, "Hola", "pos1 compared with a string"),
+                () -> assertNotEquals(pos1, pos3, "pos1 compared with pos3"),
+                () -> assertNotEquals(pos1, pos4, "pos1 compared with pos4"),
                 () -> assertNotEquals(pos1, pos2, "pos1 compared with pos2"));
     }
 
@@ -643,9 +670,10 @@ public class BoardTest {
     void testToString() {
         Board board = new Board();
         makeLoserFullBoard(board);
+        board.setCell(0, 0, Cell.EMPTY);
         assertEquals("Score: 0\n" + //
                 "+-----+-----+-----+-----+\n" + //
-                "|    4|    2|    4|    2|\n" + //
+                "|     |    2|    4|    2|\n" + //
                 "+-----+-----+-----+-----+\n" + //
                 "|    2|    4|    2|    4|\n" + //
                 "+-----+-----+-----+-----+\n" + //
@@ -660,5 +688,12 @@ public class BoardTest {
         Board.Position position = new Board.Position(0, 0);
 
         assertEquals(position.toString(), "(0, 0)");
+    }
+
+    @Test
+    void testRepOk() {
+        Board board = new Board();
+        assertTrue(board.repOK());
+
     }
 }
