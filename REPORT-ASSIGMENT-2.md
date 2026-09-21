@@ -50,6 +50,8 @@ La mayor parte de los mutantes de la clase `Board` fueron eliminados. No se lleg
 
 En esta etapa no se encontraron bugs funcionales críticos en la lógica central, pero sí lograron detectarse métodos *flaky* (intermitentes), causados principalmente por el no-determinismo en la generación aleatoria de celdas. Los registros de esta etapa fueron realizados tras aplicar mejoras de diseño y aislar componentes.
 
+Cabe aclarar que los `repOK` correspondientes a cada clase ya se encontraban implementados para el momento en el que realizamos los reportes de Randoop. La única diferencia se encuentra en el uso de la anotación `@CheckRep`- empleado para indicarle a Randoop que cree objetos siguiendo el invariante de representación de clase- dado que no está activado en los [primeros reportes de Randoop](#randoop-anterior-a-repok)
+
 ### Cambios de diseño 
 
 Las siguientes modificaciones fueron aplicadas al proyecto:
