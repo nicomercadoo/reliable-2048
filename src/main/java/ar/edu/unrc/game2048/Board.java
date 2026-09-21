@@ -2,6 +2,8 @@ package ar.edu.unrc.game2048;
 
 import java.util.*;
 
+import randoop.CheckRep;
+
 /**
  * Represents the 2048 game board.
  * The board is a square grid of Cells, typically 4x4.
@@ -24,7 +26,13 @@ public class Board {
     /**
      * Default winning value: when board contains this value, the player wins (2048)
      */
-    public static final int WINNING_VALUE = 2048;
+    public static final int DEFAULT_WINNING_VALUE = 2048;
+
+    /**
+     * User winning value: when board its created with Board(size, winningValue)
+     * constructor
+     */
+    public final int winningValue;
 
     /**
      * Board size (i.e., number of rows and columns). Must be > 0.
@@ -32,7 +40,8 @@ public class Board {
     private final int size;
 
     /**
-     * Contents of the board: a 2D array of Cells. grid[row][col] represents the cell at (row, col).
+     * Contents of the board: a 2D array of Cells. grid[row][col] represents the
+     * cell at (row, col).
      */
     private final Cell[][] grid;
 
@@ -41,23 +50,61 @@ public class Board {
      */
     private int score;
 
+    private RNGStrategy rngStrategy;
+
     /**
-     * Creates a new board of the default size (4x4) with two random tiles.
+     * Creates a new board of the default size (4x4), default winning value and with
+     * two random tiles.
      */
     public Board() {
-        this(DEFAULT_SIZE);
+        this(new RNG(), DEFAULT_SIZE, DEFAULT_WINNING_VALUE);
     }
 
     /**
-     * Creates a new board of the specified size with two random tiles.
+     * Creates a new board with a specified size, default winning value and with two
+     * random tiles.
      *
-     * @param size the board size (must be > 0)
-     * @throws IllegalArgumentException if size <= 0
+     * @param size
      */
     public Board(int size) {
+        this(new RNG(), size, DEFAULT_WINNING_VALUE);
+    }
+
+    public Board(int size, int winningValue) {
+        this(new RNG(), size, winningValue);
+    }
+
+    public Board(MockRNG mock) {
+        this(mock, DEFAULT_SIZE, DEFAULT_WINNING_VALUE);
+    }
+
+    /**
+     * Creates a new board of the specified size and specified winning value with
+     * two random tiles.
+     *
+     * @param size         the board size (must be > 0)
+     * @param winningValue winning value of the game
+     * @throws IllegalArgumentException if size <= 0
+     */
+    public Board(RNGStrategy rng, int size, int winningValue) {
         if (size <= 0) {
             throw new IllegalArgumentException("Board size must be positive: " + size);
         }
+        if (winningValue <= 0) {
+            throw new IllegalArgumentException("Winning value must be positive and not 0: " + winningValue);
+        }
+        if (!MathUtils.isPowerOfTwo(winningValue)) {
+            throw new IllegalArgumentException("Winning value must be a power of two: " + winningValue);
+        }
+
+        this.winningValue = winningValue;
+
+        if (!validSize(size)) {
+            throw new IllegalArgumentException("Board size must be greater or equals than "
+                    + Math.ceil(Math.sqrt(Math.log(winningValue) / Math.log(2))));
+        }
+
+        this.rngStrategy = rng;
         this.size = size;
         this.grid = new Cell[size][size];
         this.score = 0;
@@ -72,14 +119,28 @@ public class Board {
      * @param other the board to copy
      */
     public Board(Board other) {
+        this.winningValue = other.winningValue;
         this.size = other.size;
         this.grid = new Cell[size][size];
         this.score = other.score;
+        this.rngStrategy = other.rngStrategy;
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 this.grid[r][c] = other.grid[r][c];
             }
         }
+    }
+
+
+    /**
+     * Checks if a value is a valid board size (i.e., a power of two and large
+     * enough to reach WINNING_VALUE).
+     *
+     * @param value the value to check
+     * @return true if value is a valid board size, false otherwise
+     */
+    private boolean validSize(int size) {
+        return Math.pow(size, 2) >= Math.log(winningValue) / Math.log(2);
     }
 
     /**
@@ -91,6 +152,14 @@ public class Board {
                 grid[r][c] = Cell.EMPTY;
             }
         }
+    }
+
+
+    /**
+     * Initializes the board with all EMPTY cells.
+     */
+    public void initializeEmptyTest() {
+        initializeEmpty();
     }
 
     /**
@@ -127,11 +196,11 @@ public class Board {
     /**
      * Sets a cell at the specified position.
      *
-     * @param row the row index (0-based)
-     * @param col the column index (0-based)
+     * @param row  the row index (0-based)
+     * @param col  the column index (0-based)
      * @param cell the cell to set (must not be null)
      * @throws IndexOutOfBoundsException if row or col is out of bounds
-     * @throws IllegalArgumentException if cell is null
+     * @throws IllegalArgumentException  if cell is null
      */
     public void setCell(int row, int col, Cell cell) {
         validatePosition(row, col);
@@ -152,8 +221,7 @@ public class Board {
         if (row < 0 || row >= size || col < 0 || col >= size) {
             throw new IndexOutOfBoundsException(
                     String.format("Position (%d, %d) is out of bounds for board size %d",
-                            row, col, size)
-            );
+                            row, col, size));
         }
     }
 
@@ -192,7 +260,7 @@ public class Board {
     public boolean isWinningBoard() {
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
-                if (grid[r][c].getValue() == WINNING_VALUE) {
+                if (grid[r][c].getValue() == winningValue) {
                     return true;
                 }
             }
@@ -217,7 +285,7 @@ public class Board {
             for (int c = 0; c < size; c++) {
                 Cell current = grid[r][c];
                 // Check right neighbor
-                if (c + 1 < size - 1 && current.canMergeWith(grid[r][c + 1])) {
+                if (c + 1 < size && current.canMergeWith(grid[r][c + 1])) {
                     return false;
                 }
                 // Check down neighbor
@@ -256,34 +324,9 @@ public class Board {
                 column.add(grid[row][col]);
             }
 
-            // Remove empty cells (slide up)
-            List<Cell> nonEmpty = new ArrayList<>();
-            for (Cell cell : column) {
-                if (!cell.isEmpty()) {
-                    nonEmpty.add(cell);
-                }
-            }
-
-            // Merge adjacent equal cells
-            List<Cell> merged = new ArrayList<>();
-            int i = 0;
-            while (i < nonEmpty.size()) {
-                if (i + 1 < nonEmpty.size() &&
-                        nonEmpty.get(i).canMergeWith(nonEmpty.get(i + 1))) {
-                    Cell mergedCell = nonEmpty.get(i).mergeWith(nonEmpty.get(i + 1));
-                    merged.add(mergedCell);
-                    score += mergedCell.getValue();
-                    i += 2;
-                } else {
-                    merged.add(nonEmpty.get(i));
-                    i++;
-                }
-            }
-
-            // Pad with empty cells
-            while (merged.size() < size) {
-                merged.add(Cell.EMPTY);
-            }
+            List<Cell> nonEmpty = removeEmptyCells(column);
+            List<Cell> merged = mergeAdjacentEqualsCells(nonEmpty);
+            padWithEmptyCells(merged);
 
             // Put back into the column
             for (int row = 0; row < size; row++) {
@@ -310,38 +353,13 @@ public class Board {
         for (int col = 0; col < size; col++) {
             // Create a list of cells from bottom to top (reverse order)
             List<Cell> column = new ArrayList<>();
-            for (int row = size - 1; row > 0; row--) {
+            for (int row = size - 1; row >= 0; row--) {
                 column.add(grid[row][col]);
             }
 
-            // Remove empty cells
-            List<Cell> nonEmpty = new ArrayList<>();
-            for (Cell cell : column) {
-                if (!cell.isEmpty()) {
-                    nonEmpty.add(cell);
-                }
-            }
-
-            // Merge adjacent equal cells
-            List<Cell> merged = new ArrayList<>();
-            int i = 0;
-            while (i < nonEmpty.size()) {
-                if (i + 1 < nonEmpty.size() &&
-                        nonEmpty.get(i).canMergeWith(nonEmpty.get(i + 1))) {
-                    Cell mergedCell = nonEmpty.get(i).mergeWith(nonEmpty.get(i + 1));
-                    merged.add(mergedCell);
-                    score += mergedCell.getValue();
-                    i += 2;
-                } else {
-                    merged.add(nonEmpty.get(i));
-                    i++;
-                }
-            }
-
-            // Pad with empty cells
-            while (merged.size() < size) {
-                merged.add(Cell.EMPTY);
-            }
+            List<Cell> nonEmpty = removeEmptyCells(column);
+            List<Cell> merged = mergeAdjacentEqualsCells(nonEmpty);
+            padWithEmptyCells(merged);
 
             // Put back into the column (reverse back to original order)
             for (int row = size - 1; row >= 0; row--) {
@@ -372,34 +390,9 @@ public class Board {
                 rowList.add(grid[row][col]);
             }
 
-            // Remove empty cells
-            List<Cell> nonEmpty = new ArrayList<>();
-            for (Cell cell : rowList) {
-                if (!cell.isEmpty()) {
-                    nonEmpty.add(cell);
-                }
-            }
-
-            // Merge adjacent equal cells
-            List<Cell> merged = new ArrayList<>();
-            int i = 0;
-            while (i < nonEmpty.size()) {
-                if (i + 1 < nonEmpty.size() &&
-                        nonEmpty.get(i).canMergeWith(nonEmpty.get(i + 1))) {
-                    Cell mergedCell = nonEmpty.get(i).mergeWith(nonEmpty.get(i + 1));
-                    merged.add(mergedCell);
-                    score += mergedCell.getValue();
-                    i += 2;
-                } else {
-                    merged.add(nonEmpty.get(i));
-                    i++;
-                }
-            }
-
-            // Pad with empty cells
-            while (merged.size() < size) {
-                merged.add(Cell.EMPTY);
-            }
+            List<Cell> nonEmpty = removeEmptyCells(rowList);
+            List<Cell> merged = mergeAdjacentEqualsCells(nonEmpty);
+            padWithEmptyCells(merged);
 
             // Put back into the row
             for (int col = 0; col < size; col++) {
@@ -430,34 +423,9 @@ public class Board {
                 rowList.add(grid[row][col]);
             }
 
-            // Remove empty cells
-            List<Cell> nonEmpty = new ArrayList<>();
-            for (Cell cell : rowList) {
-                if (!cell.isEmpty()) {
-                    nonEmpty.add(cell);
-                }
-            }
-
-            // Merge adjacent equal cells
-            List<Cell> merged = new ArrayList<>();
-            int i = 0;
-            while (i < nonEmpty.size()) {
-                if (i + 1 < nonEmpty.size() &&
-                        nonEmpty.get(i).canMergeWith(nonEmpty.get(i + 1))) {
-                    Cell mergedCell = nonEmpty.get(i).mergeWith(nonEmpty.get(i + 1));
-                    merged.add(mergedCell);
-                    score += mergedCell.getValue();
-                    i += 2;
-                } else {
-                    merged.add(nonEmpty.get(i));
-                    i++;
-                }
-            }
-
-            // Pad with empty cells
-            while (merged.size() < size) {
-                merged.add(Cell.EMPTY);
-            }
+            List<Cell> nonEmpty = removeEmptyCells(rowList);
+            List<Cell> merged = mergeAdjacentEqualsCells(nonEmpty);
+            padWithEmptyCells(merged);
 
             // Put back into the row (reverse back to original order)
             for (int col = size - 1; col >= 0; col--) {
@@ -470,6 +438,58 @@ public class Board {
             addRandomTile(); // Add new random tile after successful move
         }
         return moved;
+    }
+
+    /**
+     * Merge adjacent cells in the list that have equal values.
+     *
+     * @param nonEmpty a list of non-empty cells
+     * @return a new list of cells after merging
+     */
+    private List<Cell> mergeAdjacentEqualsCells(List<Cell> nonEmpty) {
+        List<Cell> merged = new ArrayList<>();
+        int i = 0;
+        while (i < nonEmpty.size()) {
+            if (i + 1 < nonEmpty.size() &&
+                    nonEmpty.get(i).canMergeWith(nonEmpty.get(i + 1))) {
+                Cell mergedCell = nonEmpty.get(i).mergeWith(nonEmpty.get(i + 1));
+                merged.add(mergedCell);
+                score += mergedCell.getValue();
+                i += 2;
+            } else {
+                merged.add(nonEmpty.get(i));
+                i++;
+            }
+        }
+        return merged;
+    }
+
+    /**
+     * Removes all EMPTY cells from the given list of cells.
+     *
+     * @param rowList a list of cells
+     * @return a new list containing only non-empty cells
+     */
+    private List<Cell> removeEmptyCells(List<Cell> rowList) {
+        List<Cell> nonEmpty = new ArrayList<>();
+        for (Cell cell : rowList) {
+            if (!cell.isEmpty()) {
+                nonEmpty.add(cell);
+            }
+        }
+        return nonEmpty;
+    }
+
+    /**
+     * Pads the list of merged cells with EMPTY cells until it reaches the board
+     * size.
+     *
+     * @param merged a list of merged cells
+     */
+    private void padWithEmptyCells(List<Cell> merged) {
+        while (merged.size() < size) {
+            merged.add(Cell.EMPTY);
+        }
     }
 
     // ==================== RANDOM TILE ADDITION (PRIVATE) ====================
@@ -488,11 +508,11 @@ public class Board {
         }
 
         // Choose random position
-        int randomIndex = (int) (Math.random() * empty.size());
+        int randomIndex = (int) (rngStrategy.getRandom() * empty.size());
         Position pos = empty.stream().skip(randomIndex).findFirst().get();
 
         // 90% chance of 2, 10% chance of 4 (standard 2048 rules)
-        int value = Math.random() < 0.9 ? 2 : 4;
+        int value = rngStrategy.getRandom() < 0.9 ? 2 : 4;
         grid[pos.row][pos.col] = new Cell(value);
 
         return true;
@@ -509,11 +529,14 @@ public class Board {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Board board = (Board) o;
         return size == board.size &&
                 score == board.score &&
+                winningValue == board.winningValue &&
                 Arrays.deepEquals(grid, board.grid);
     }
 
@@ -537,8 +560,7 @@ public class Board {
             }
             sb.append("\n|");
             for (int c = 0; c < size; c++) {
-                String val = grid[r][c].isEmpty() ? "     " :
-                        String.format("%5d", grid[r][c].getValue());
+                String val = grid[r][c].isEmpty() ? "     " : String.format("%5d", grid[r][c].getValue());
                 sb.append(val).append("|");
             }
             sb.append("\n");
@@ -551,14 +573,55 @@ public class Board {
         return sb.toString();
     }
 
-    // ==================== INNER CLASSES ====================
+    // ==================== REPRESENTATION CORRECTNESS METHODS ====================
 
     /**
-     * Represents a direction on the board.
-     */
-    public enum Direction {
-        UP, DOWN, LEFT, RIGHT
+    * Representation invariant check for the Board class.
+    * This method checks that the board's internal state is consistent
+    * and valid according to the representation invariants.
+    * Specifically, it checks:
+    *   <ul>
+    *       <li> the {@link #size} is positive, </li>
+    *       <li> the {@link #size} is valid for the winning value, </li>
+    *       <li> the {@link #winningValue} is a power of two, </li>
+    *       <li> the {@link #grid} is non-null. </li>
+    *       <li> the {@link #grid} is a square matrix (rows == cols), </li>
+    *       <li> all cells in the {@link #grid} are non-null, </li>
+    *       <li> all cell values are valid per {@link Cell} invariants. </li>
+    *   </ul>
+    *
+    * @return <code>true</code> if the representation invariants hold, false otherwise.
+    */
+    @CheckRep
+    public boolean repOK() {
+        if (size <= 0) {
+            return false;
+        }
+        if (!validSize(size)) {
+            return false;
+        }
+        if (winningValue <= 0 || !MathUtils.isPowerOfTwo(winningValue)) {
+            return false;
+        }
+        if (grid == null || grid.length != size) {
+            return false;
+        }
+        for (int r = 0; r < size; r++) {
+            if (grid[r] == null || grid[r].length != size) {
+                return false;
+            }
+            for (int c = 0; c < size; c++) {
+                if (grid[r][c] == null || !grid[r][c].repOK()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
+
+    // ==================== INNER CLASSES ====================
+
+    
 
     /**
      * Represents a position on the board.
@@ -574,8 +637,10 @@ public class Board {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
             Position position = (Position) o;
             return row == position.row && col == position.col;
         }
@@ -589,5 +654,15 @@ public class Board {
         public String toString() {
             return "(" + row + ", " + col + ")";
         }
+    }
+
+    public boolean isEmpty() {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (!grid[i][j].equals(Cell.EMPTY))
+                    return false;
+            }
+        }
+        return true;
     }
 }

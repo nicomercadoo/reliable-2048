@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainCLI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">2048-game</a> &gt; <a href="index.source.html" class="el_package">ar.edu.unrc.game2048</a> &gt; <span class="el_source">MainCLI.java</span></div><h1>MainCLI.java</h1><pre class="source lang-java linenums">package ar.edu.unrc.game2048;
+
+import java.util.Scanner;
+
+/**
+ * Command-line interface for the 2048 game.
+ * 
+ * This class handles user input and displays the board state.
+ * It demonstrates how to use the Board class and its methods.
+ */
+public class MainCLI {
+    private final Board board;
+    private final Scanner scanner;
+
+<span class="nc" id="L15">    public MainCLI() {</span>
+<span class="nc" id="L16">        this.scanner = new Scanner(System.in);</span>
+
+<span class="nc" id="L18">        System.out.print(&quot;Enter a board size: &quot;);</span>
+<span class="nc" id="L19">        String sizeInput = this.scanner.nextLine().trim();</span>
+
+<span class="nc" id="L21">        System.out.print(&quot;Enter a winning value: &quot;);</span>
+<span class="nc" id="L22">        String winningValueInput = this.scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        int size = sizeInput.isBlank()</span>
+<span class="nc" id="L25">                ? Board.DEFAULT_SIZE</span>
+<span class="nc" id="L26">                : Integer.parseInt(sizeInput);</span>
+
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        int winningValue = winningValueInput.isBlank()</span>
+<span class="nc" id="L29">                ? Board.DEFAULT_WINNING_VALUE</span>
+<span class="nc" id="L30">                : Integer.parseInt(winningValueInput);</span>
+
+<span class="nc" id="L32">        this.board = new Board(size, winningValue);</span>
+<span class="nc" id="L33">    }</span>
+
+    /**
+     * Main game loop.
+     */
+    public void play() {
+<span class="nc" id="L39">        System.out.println(&quot;=== 2048 Game ===&quot;);</span>
+<span class="nc" id="L40">        System.out.println(&quot;Controls: W(up), S(down), A(left), D(right), Q(quit)&quot;);</span>
+<span class="nc" id="L41">        System.out.println();</span>
+
+        while (true) {
+<span class="nc" id="L44">            displayBoard();</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (board.isWinningBoard()) {</span>
+<span class="nc" id="L47">                System.out.println(&quot;🎉 Congratulations! You reached 2048! 🎉&quot;);</span>
+<span class="nc" id="L48">                System.out.println(&quot;You can continue playing or quit.&quot;);</span>
+            }
+
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            if (board.isLosingBoard()) {</span>
+<span class="nc" id="L52">                System.out.println(&quot;💀 Game Over! No more moves available. 💀&quot;);</span>
+<span class="nc" id="L53">                System.out.println(&quot;Final score: &quot; + board.getScore());</span>
+<span class="nc" id="L54">                break;</span>
+            }
+
+<span class="nc" id="L57">            System.out.print(&quot;Enter move: &quot;);</span>
+<span class="nc" id="L58">            String input = scanner.nextLine().trim().toUpperCase();</span>
+
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (input.equals(&quot;Q&quot;)) {</span>
+<span class="nc" id="L61">                System.out.println(&quot;Thanks for playing! Final score: &quot; + board.getScore());</span>
+<span class="nc" id="L62">                break;</span>
+            }
+
+<span class="nc" id="L65">            boolean moved = false;</span>
+<span class="nc bnc" id="L66" title="All 5 branches missed.">            switch (input) {</span>
+                case &quot;W&quot;:
+<span class="nc" id="L68">                    moved = board.moveUp();</span>
+<span class="nc" id="L69">                    break;</span>
+                case &quot;S&quot;:
+<span class="nc" id="L71">                    moved = board.moveDown();</span>
+<span class="nc" id="L72">                    break;</span>
+                case &quot;A&quot;:
+<span class="nc" id="L74">                    moved = board.moveLeft();</span>
+<span class="nc" id="L75">                    break;</span>
+                case &quot;D&quot;:
+<span class="nc" id="L77">                    moved = board.moveRight();</span>
+<span class="nc" id="L78">                    break;</span>
+                default:
+<span class="nc" id="L80">                    System.out.println(&quot;Invalid input! Use W, A, S, D, or Q.&quot;);</span>
+<span class="nc" id="L81">                    continue;</span>
+            }
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (moved) {</span>
+<span class="nc" id="L85">                System.out.println(&quot;Tile moved!&quot;);</span>
+            } else {
+<span class="nc" id="L87">                System.out.println(&quot;No tiles moved. Try a different direction.&quot;);</span>
+            }
+
+<span class="nc" id="L90">            System.out.println();</span>
+<span class="nc" id="L91">        }</span>
+
+<span class="nc" id="L93">        scanner.close();</span>
+<span class="nc" id="L94">    }</span>
+
+    /**
+     * Displays the current board state.
+     */
+    private void displayBoard() {
+<span class="nc" id="L100">        System.out.println(board);</span>
+<span class="nc" id="L101">    }</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L104">        MainCLI game = new MainCLI();</span>
+<span class="nc" id="L105">        game.play();</span>
+<span class="nc" id="L106">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
