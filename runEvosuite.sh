@@ -1,6 +1,3 @@
-#!/bin/bash
-# generate_evosuite_tests.sh
-
 set -e # Detiene el script si algún paso falla
 
 JAVA8_HOME="/usr/lib/jvm/java-8-openjdk"
@@ -11,9 +8,14 @@ if [ ! -d "$JAVA8_HOME" ]; then
     exit 1
 fi
 
+# Validar que se haya pasado al menos una clase
+if [ "$#" -eq 0 ]; then
+    echo "Uso: $0 <Clase1> [Clase2 ... ClaseN]"
+    exit 1
+fi
+
 EVOSUITE_JAR="evosuite-1.0.6.jar"
 EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v1.0.6/evosuite-1.0.6.jar"
-TARGET_CLASS="ar.edu.unrc.game2048.Cell"
 SEARCH_BUDGET=60
 
 if [ ! -f "$EVOSUITE_JAR" ]; then
@@ -26,12 +28,16 @@ JAVA_HOME="$JAVA8_HOME" mvn clean compile -Dmaven.compiler.source=1.8 -Dmaven.co
 
 CLASS_PATH="$(pwd)/target/classes"
 
-echo "Generando tests de EvoSuite para $TARGET_CLASS..."
-"$JAVA8_HOME/bin/java" -jar "$EVOSUITE_JAR" \
-    -projectCP "$CLASS_PATH" \
-    -class "$TARGET_CLASS" \
-    -Dsearch_budget="$SEARCH_BUDGET" \
-    -Dtest_dir=src/test/java
+# Iterar sobre todas las clases pasadas por parámetro
+for TARGET_CLASS in "$@"; do
+    echo "--------------------------------------------------------"
+    echo "Generando tests de EvoSuite para $TARGET_CLASS..."
+    "$JAVA8_HOME/bin/java" -jar "$EVOSUITE_JAR" \
+        -projectCP "$CLASS_PATH" \
+        -class "$TARGET_CLASS" \
+        -Dsearch_budget="$SEARCH_BUDGET" \
+        -Dtest_dir=src/test/java
 
-echo "Ejecutando tests generados..."
-JAVA_HOME="$JAVA8_HOME" mvn test -Pevosuite -Dtest="${TARGET_CLASS##*.}*ESTest"
+    echo "Ejecutando tests generados para ${TARGET_CLASS##*.}..."
+    JAVA_HOME="$JAVA8_HOME" mvn test -Pevosuite -Dtest="${TARGET_CLASS##*.}*ESTest"
+done
