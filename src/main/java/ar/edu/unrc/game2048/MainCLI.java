@@ -21,11 +21,11 @@ public class MainCLI {
         System.out.print("Enter a winning value: ");
         String winningValueInput = this.scanner.nextLine().trim();
 
-        int size = sizeInput.isBlank()
+        int size = sizeInput.trim().isEmpty()
                 ? Board.DEFAULT_SIZE
                 : Integer.parseInt(sizeInput);
 
-        int winningValue = winningValueInput.isBlank()
+        int winningValue = winningValueInput.trim().isEmpty()
                 ? Board.DEFAULT_WINNING_VALUE
                 : Integer.parseInt(winningValueInput);
 
