@@ -122,7 +122,10 @@ class RandomFuzzer(Fuzzer):
         Example output for a sequence of 3 moves:
             'w\\na\\nd\\nq\\n'
         """
-        raise NotImplementedError
+        moves = random.choices(KEYS, k=random.randint(self.min_length, self.max_length))
+
+        output = "4\n2048\n" + "\n".join(moves) + "\nq\n"      
+        return output
 
 # ---------------------------------------------------------------------------
 # Main: run the fuzzer and report results
