@@ -47,7 +47,7 @@ class CLIRunner(Runner):
     PASS, FAIL, or UNRESOLVED.
     """
 
-    COMMAND = ['java', '-cp', './target/classes', 'ar.edu.unrc.game2048.MainCLI']
+    COMMAND = ['java', '-ea', '-cp', './target/classes', 'ar.edu.unrc.game2048.MainCLI']
     TIMEOUT = 10  # seconds
 
     def run(self, inp: str) -> Tuple[subprocess.CompletedProcess, str]:
@@ -124,7 +124,7 @@ class RandomFuzzer(Fuzzer):
         """
         moves = random.choices(KEYS, k=random.randint(self.min_length, self.max_length))
 
-        output = "4\n2048\n" + "\n".join(moves) + "\nq\n"      
+        output = "4\n2048\n" + "\n".join(moves) + "\n" + "\n".join(QUIT)      
         return output
 
 # ---------------------------------------------------------------------------
