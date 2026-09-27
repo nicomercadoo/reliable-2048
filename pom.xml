@@ -106,6 +106,10 @@
                         <include>**/ErrorTest*.java</include>
                         <include>**/*Test.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/*ESTest.java</exclude>
+                        <exclude>**/*ESTest_scaffolding.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
@@ -186,6 +190,19 @@
             </properties>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M9</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*ESTest.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
                     <!-- EvoSuite Plugin -->
                     <plugin>
                         <groupId>org.evosuite.plugins</groupId>
