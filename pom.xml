@@ -188,13 +188,32 @@
                 <maven.compiler.source>1.8</maven.compiler.source>
                 <maven.compiler.target>1.8</maven.compiler.target>
             </properties>
+
+            <!-- Dependencia necesaria para que la instrumentación offline funcione -->
+            <dependencies>
+                <dependency>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>org.jacoco.agent</artifactId>
+                    <version>0.8.10</version>
+                    <classifier>runtime</classifier>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
             <build>
                 <plugins>
+                    <!-- Surefire configurado para Offline -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>3.0.0-M9</version>
                         <configuration>
+                            <!-- Solo dejamos la variable de EvoSuite, JaCoCo ya no usa agente -->
+                            <argLine>@{argLine}</argLine>
+                            <!-- Le decimos a las clases instrumentadas dónde guardar los resultados -->
+                            <systemPropertyVariables>
+                                <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
+                            </systemPropertyVariables>
                             <includes>
                                 <include>**/*ESTest.java</include>
                             </includes>
@@ -203,7 +222,8 @@
                             </excludes>
                         </configuration>
                     </plugin>
-                    <!-- EvoSuite Plugin -->
+
+                    <!-- Plugin de EvoSuite -->
                     <plugin>
                         <groupId>org.evosuite.plugins</groupId>
                         <artifactId>evosuite-maven-plugin</artifactId>
@@ -212,6 +232,38 @@
                             <execution>
                                 <goals> <goal> prepare </goal> </goals>
                                 <phase> process-test-classes </phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- JaCoCo configurado en modo Offline -->
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.10</version>
+                        <executions>
+                            <!-- 1. Instrumenta las clases -->
+                            <execution>
+                                <id>default-instrument</id>
+                                <goals>
+                                    <goal>instrument</goal>
+                                </goals>
+                            </execution>
+                            <!-- 2. Forzamos a que restaure las originales al final de la fase test -->
+                            <execution>
+                                <id>default-restore-instrumented-classes</id>
+                                <phase>test</phase> <!-- Agregamos esto -->
+                                <goals>
+                                    <goal>restore-instrumented-classes</goal>
+                                </goals>
+                            </execution>
+                            <!-- 3. Genera el reporte inmediatamente después -->
+                            <execution>
+                                <id>report-offline</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>
