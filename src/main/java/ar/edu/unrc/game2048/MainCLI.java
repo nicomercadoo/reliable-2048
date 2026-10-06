@@ -21,11 +21,11 @@ public class MainCLI {
         System.out.print("Enter a winning value: ");
         String winningValueInput = this.scanner.nextLine().trim();
 
-        int size = sizeInput.trim().isEmpty()
+        int size = sizeInput.isEmpty()
                 ? Board.DEFAULT_SIZE
                 : Integer.parseInt(sizeInput);
 
-        int winningValue = winningValueInput.trim().isEmpty()
+        int winningValue = winningValueInput.isEmpty()
                 ? Board.DEFAULT_WINNING_VALUE
                 : Integer.parseInt(winningValueInput);
 
@@ -39,6 +39,8 @@ public class MainCLI {
         System.out.println("=== 2048 Game ===");
         System.out.println("Controls: W(up), S(down), A(left), D(right), Q(quit)");
         System.out.println();
+
+        assert board.repOK() : "Invariante violado al inicializar el tablero";
 
         while (true) {
             displayBoard();
@@ -80,6 +82,8 @@ public class MainCLI {
                     System.out.println("Invalid input! Use W, A, S, D, or Q.");
                     continue;
             }
+
+            assert board.repOK() : "Invariante violado tras intentar mover: " + input;
 
             if (moved) {
                 System.out.println("Tile moved!");
