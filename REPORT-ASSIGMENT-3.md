@@ -4,6 +4,9 @@
 
 Generamos tests usando EvoSuite usando el script [runEvousuite.sh](./runEvosuite.sh).
 
+> [!NOTE]
+> Ver [README-TOOLS.md](./README-TOOLS.md) para entender como correr los tests generales vs. los de Evouite.
+
 ```sh
 ./runEvosuite.sh --gen ar.edu.unrc.game2048.{Cell,Board}
 ```
@@ -66,6 +69,38 @@ Se añadieron asserts del repOK en lugares vitales de la ejecución del código 
 
 No fue encontrada ninguna situación de crasheos o de fallas en alguna aserción.
 
-### Conclusiones y Comparativa (EvoSuite y Randoop)
+## Conclusiones y Comparativa
 
-El fuzzer demuestra tener sus ventajas al ser un método de testing de caja negra, con una implementación sumamente sencilla, debido a solo tratarse de entradas al programa aleatorizadas. Aún así, nos parece prudente concluir que no es suficiente con la implementación de un fuzzer, debido a la nula noción de cobertura interna y, por ende, de cobertura de mutantes. De todas formas, sirve como una buen complemento a tests suites generadas ya sea por Randoop o por EvoSuite que son herramientas mucho más complejas y pesadas computacionalmente, pero con un resultado mucho mayor en cuanto a cobertura y testing.
+### Cobertura y Mutation Scores por Técnica
+
+A continuación se presenta la comparativa integral de las técnicas de prueba empleadas a lo largo de los assignments: **pruebas manuales** (iniciales y mejoradas), **generación aleatoria con Randoop** (con y sin invariantes `repOK`), la **suite consolidada final** de Assignment 2, **generación evolutiva con EvoSuite** (Assignment 3, Fase 1) y **fuzzing de interfaz CLI** (Assignment 3, Fase 2).
+
+#### Tabla Comparativa General del Proyecto
+
+| Técnica / Enfoque | Herramienta | Cobertura de Líneas (Line Cov) | Cobertura de Ramas (Branch Cov) | Mutation Score (Mutation Cov) | Test Strength |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Tests Manuales (Inicial - A1/A2 P1)** | JaCoCo + PITest | 82% (279/340) | 81% (142/174) | **69%** (148/216) | 82% (148/180) |
+| **Tests Manuales (Mejorados - A2 P2)** | JaCoCo + PITest | 79% (227/286) | 87% (180/205) | **83%** (203/245) | 94% (203/215) |
+| **Randoop Base (Sin repOK - A2 P3)** | JaCoCo + PITest | 65% (205/317) | 58% (134/229) | **51%** (140/272) | 79% (140/177) |
+| **Randoop + repOK + MockRNG (A2 P3)** | JaCoCo + PITest | 68% (219/321) | 67% (159/235) | **65%** (180/277) | 92% (180/196) |
+| **Suite Consolidada (Manual + Randoop)** | JaCoCo + PITest | 80% (256/321) | 86% (204/235) | **84%** (232/277) | 95% (232/243) |
+| **EvoSuite (Genético/Evolutivo - A3 P1)** | JaCoCo + EvoSuite Stats | **80%** (256/319) | **83%** (196/235) | **>91% - 94%** *(Weak Mutation)* | N/A *(PIT incompatible)* |
+| **Fuzzer CLI + repOK (A3 P2)** | `fuzzer.py` + JVM `-ea` | N/A *(Caja negra CLI)* | N/A *(Caja negra CLI)* | N/A *(Dinámico)* | N/A *(Dinámico)* |
+
+---
+
+#### Análisis Comparativo
+
+**Tests Manuales vs. Generación Automática**:
+- Los **tests manuales** alcanzaron un Mutation Score elevado (83% en PIT con un Test Strength del 94%), ya que las aserciones fueron diseñadas intencionalmente para validar la semántica del juego.  Sin embargo, requirieron un esfuerzo considerable de diseño para alcanzar las ramas menos transitadas.
+- **Randoop** generó tests rápidamente, pero sin `repOK` su cobertura de ramas fue baja (58%) y su Mutation Score fue el más pobre de todos (51%). Al incorporar `repOK` y `MockRNG`, el Mutation Score subió al 65% y la cobertura de ramas al 67%.
+- **EvoSuite** superó ampliamente a Randoop en cobertura de código sobre las clases objetivo: alcanzó un 96% de líneas y 89% de ramas en `Board`, y un 93% de líneas y 93% de ramas en `Cell` (frente a 83% y 78% de Randoop). Cabe destacar que los tests generados por evosuit son mas legibles que los de randoop, aunque no encontraron ningún bug. Además, la mayoría de los que generó son tests de regresión y no hay muchos tests con ascerciones interesantes. 
+
+**Rol del Fuzzer CLI**:
+- A diferencia de las pruebas unitarias (que se enfocan en métodos y clases aisladas), el fuzzer opera a nivel de sistema como una prueba de caja negra sobre `MainCLI`.
+- Aunque no provee métricas estáticas de JaCoCo o PITest integradas en el ciclo de construcción de Maven, complementa de manera única a Randoop y EvoSuite: ejercita el flujo de extremo a extremo y la entrada estándar del juego, validando continuamente los contratos de representación mediante `assert repOK()` con el flag `-ea` de la JVM en partidas completas.
+- El fuzzer demuestra tener sus ventajas al ser un método de testing de caja negra, con una implementación sumamente sencilla, debido a solo tratarse de entradas al programa aleatorizadas. Aún así, nos parece prudente concluir que no es suficiente con la implementación de un fuzzer, debido a la nula noción de cobertura interna y, por ende, de cobertura de mutantes. De todas formas, sirve como un buen complemento a test suites generadas ya sea por Randoop o por EvoSuite que son herramientas mucho más complejas y pesadas computacionalmente, pero con un resultado mucho mayor en cuanto a cobertura y testing.
+
+### Conclusiones Finales
+
+Para nosotros Randoop y Evosuite contribuyeron equitativamente en el desarrollo del proyecto. Randoop nos permitío encontrar bugs que arreglamos en el assignment 2 y que no nos hubieramos dado cuenta de su existencia si no usabamos la herramienta. Y por otro lado Evosuite nos ayudó a mejorar la cobertura de la testsuite. Respecto al fuzzer, permitió que pudieramos testear la interfaz CLI del proyecto de manera automática, generando distintos tipos de movimientos y jugadas.
