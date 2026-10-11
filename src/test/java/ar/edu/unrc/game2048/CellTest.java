@@ -25,7 +25,7 @@ public class CellTest {
         });
     }
 
-    @Test 
+    @Test
     void testCellValueZero() {
         Cell cell = new Cell(0);
         assertTrue(cell.repOK());
@@ -72,7 +72,7 @@ public class CellTest {
         assertThrows(IllegalArgumentException.class, () -> {
             cell.mergeWith(new Cell(0));
         });
-        
+
     }
 
     @Test
@@ -102,7 +102,7 @@ public class CellTest {
         assertNotEquals(cell2.hashCode(), cell3.hashCode());
     }
 
-    @Test 
+    @Test
     void testToStringZero() {
         assertEquals(Cell.EMPTY.toString(), ".");
     }
