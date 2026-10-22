@@ -1,19 +1,21 @@
 package ar.edu.unrc.game2048;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 
 import java.util.Set;
-
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class BoardTest {
 
     private void makeLoserFullBoard(Board board) {
         for (int row = 0; row < board.getSize(); row++) {
             for (int column = 0; column < board.getSize(); column++) {
-                if ((row % 2 == 1 && column % 2 == 0) || (row % 2 == 0 && column % 2 == 1)) {
+                if (
+                    (row % 2 == 1 && column % 2 == 0) ||
+                    (row % 2 == 0 && column % 2 == 1)
+                ) {
                     board.setCell(row, column, new Cell(2));
                 } else {
                     board.setCell(row, column, new Cell(4));
@@ -22,81 +24,89 @@ public class BoardTest {
         }
     }
 
-    @Test
-    void testInvalidBoardSize() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Board(3);
-        });
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidBoardSize() {
+        new Board(3);
     }
 
     @Test
-    void testInvalidBoardSizeString() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+    public void testInvalidBoardSizeString() {
+        try {
             new Board(3);
-        });
-        assertThat(exception.getMessage(), containsString("Board size must be greater or equals than 4.0"));
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString("Board size must be greater or equals than 4.0")
+            );
+        }
     }
 
     @Test
-    void testValidEqualBoardSize() {
+    public void testValidEqualBoardSize() {
         new Board(4, 65536);
-
     }
 
     @Test
-    void testInvalidBoardSizeZero() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+    public void testInvalidBoardSizeZero() {
+        try {
             new Board(0);
-        });
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException exception) {
+            assertTrue(
+                exception.getMessage().contains("Board size must be positive")
+            );
+        }
+    }
 
-        assertTrue(exception.getMessage().contains("Board size must be positive"));
+    @Test(expected = IllegalArgumentException.class)
+    public void testNegativeSize() {
+        new Board(-1);
     }
 
     @Test
-    void testNegativeSize() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Board(-1);
-        });
-    }
-
-    @Test
-    void testWinningValueZero() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+    public void testWinningValueZero() {
+        try {
             new Board(4, 0);
-        });
-
-        assertTrue(exception.getMessage().contains("must be positive and not 0"));
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException exception) {
+            assertTrue(
+                exception.getMessage().contains("must be positive and not 0")
+            );
+        }
     }
 
     @Test
-    void testNegativeWinningValue() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+    public void testNegativeWinningValue() {
+        try {
             new Board(4, -1);
-        });
-        assertTrue(exception.getMessage().contains("must be positive and not 0"));
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException exception) {
+            assertTrue(
+                exception.getMessage().contains("must be positive and not 0")
+            );
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNoPowerOfTwoWinningValue() {
+        new Board(4, 3);
     }
 
     @Test
-    void testNoPowerOfTwoWinningValue() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Board(4, 3);
-        });
-    }
-
-    @Test
-    void testDefaultBoard() {
+    public void testDefaultBoard() {
         Board board = new Board();
         assertEquals(4, board.getSize());
     }
 
     @Test
-    void testConstructorWithArgument() {
+    public void testConstructorWithArgument() {
         Board board = new Board(6);
         assertEquals(6, board.getSize());
     }
 
     @Test
-    void testCopy() {
+    public void testCopy() {
         Board board = new Board(6);
         assertEquals(6, board.getSize());
         Board board2 = new Board(board);
@@ -104,39 +114,45 @@ public class BoardTest {
     }
 
     @Test
-    void testGetCell() {
+    public void testGetCell() {
         Board board = new Board();
         Cell cell = board.getCell(0, 0);
         assertNotNull(cell);
     }
 
     @Test
-    void testNegativeGetCell() {
+    public void testNegativeGetCell() {
         Board board = new Board();
         Cell cell = board.getCell(0, 0);
         assertNotNull(cell);
-        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () -> {
+        try {
             board.getCell(-1, 0);
-        });
-        assertThat(exception.getMessage(), containsString("Position (-1, 0) is out of bounds for board size 4"));
-
+            fail("Expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString(
+                    "Position (-1, 0) is out of bounds for board size 4"
+                )
+            );
+        }
     }
 
     @Test
-    void testIsEmpty() {
+    public void testIsEmpty() {
         Board board = new Board(4);
         board.initializeEmptyTest();
         assertTrue(board.isEmpty());
     }
 
     @Test
-    void testFalseIsEmpty() {
+    public void testFalseIsEmpty() {
         Board board = new Board(4);
         assertFalse(board.isEmpty());
     }
 
     @Test
-    void testSetCell() {
+    public void testSetCell() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -145,93 +161,124 @@ public class BoardTest {
     }
 
     @Test
-    void testNegativeSetCell() {
+    public void testNegativeSetCell() {
         Board board = new Board();
         board.initializeEmptyTest();
-        assertAll("Board.setCell() should throw exceptions for invalid inputs",
-                () -> {
-                    IndexOutOfBoundsException exception = assertThrows(
-                            IndexOutOfBoundsException.class,
-                            () -> board.setCell(-1, 0, new Cell(2)),
-                            "Setting a cell with negative row index should throw an exception");
-                    assertThat(exception.getMessage(),
-                            containsString("Position (-1, 0) is out of bounds for board size " + board.getSize()));
-                },
 
-                () -> {
-                    IndexOutOfBoundsException exception = assertThrows(
-                            IndexOutOfBoundsException.class,
-                            () -> board.setCell(0, -1, new Cell(2)),
-                            "Setting a cell with negative column index should throw an exception");
-                    assertThat(exception.getMessage(),
-                            containsString("Position (0, -1) is out of bounds for board size " + board.getSize()));
-                },
+        // 1. Negative row
+        try {
+            board.setCell(-1, 0, new Cell(2));
+            fail("Expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString(
+                    "Position (-1, 0) is out of bounds for board size " +
+                        board.getSize()
+                )
+            );
+        }
 
-                () -> {
-                    IndexOutOfBoundsException exception = assertThrows(
-                            IndexOutOfBoundsException.class,
-                            () -> board.setCell(board.getSize(), 0, new Cell(2)),
-                            "Setting a cell with row index equal to size should throw an exception");
-                    assertThat(exception.getMessage(), containsString("Position (" + board.getSize()
-                            + ", 0) is out of bounds for board size " + board.getSize()));
-                },
+        // 2. Negative column
+        try {
+            board.setCell(0, -1, new Cell(2));
+            fail("Expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString(
+                    "Position (0, -1) is out of bounds for board size " +
+                        board.getSize()
+                )
+            );
+        }
 
-                () -> {
-                    IndexOutOfBoundsException exception = assertThrows(
-                            IndexOutOfBoundsException.class,
-                            () -> board.setCell(0, board.getSize(), new Cell(2)),
-                            "Setting a cell with column index equal to size should throw an exception");
-                    assertThat(exception.getMessage(), containsString("Position (0, " + board.getSize()
-                            + ") is out of bounds for board size " + board.getSize()));
-                },
+        // 3. Row out of bounds
+        try {
+            board.setCell(board.getSize(), 0, new Cell(2));
+            fail("Expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString(
+                    "Position (" +
+                        board.getSize() +
+                        ", 0) is out of bounds for board size " +
+                        board.getSize()
+                )
+            );
+        }
 
-                () -> {
-                    IndexOutOfBoundsException exception = assertThrows(
-                            IndexOutOfBoundsException.class,
-                            () -> board.setCell(board.getSize(), board.getSize(), new Cell(2)),
-                            "Setting a cell with both indexes equal to size should throw an exception");
-                    assertThat(exception.getMessage(), containsString("Position (" + board.getSize() + ", "
-                            + board.getSize() + ") is out of bounds for board size " + board.getSize()));
-                },
+        // 4. Column out of bounds
+        try {
+            board.setCell(0, board.getSize(), new Cell(2));
+            fail("Expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString(
+                    "Position (0, " +
+                        board.getSize() +
+                        ") is out of bounds for board size " +
+                        board.getSize()
+                )
+            );
+        }
 
-                () -> {
-                    IllegalArgumentException exception = assertThrows(
-                            IllegalArgumentException.class,
-                            () -> board.setCell(0, 0, null),
-                            "Setting a cell with null value should throw an exception");
-                    // Ajusta el texto "Cell cannot be null" según el mensaje real que lances en tu
-                    // código
-                    assertThat(exception.getMessage(), containsString("Cell cannot be null"));
-                });
+        // 5. Both coordinates out of bounds
+        try {
+            board.setCell(board.getSize(), board.getSize(), new Cell(2));
+            fail("Expected IndexOutOfBoundsException");
+        } catch (IndexOutOfBoundsException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString(
+                    "Position (" +
+                        board.getSize() +
+                        ", " +
+                        board.getSize() +
+                        ") is out of bounds for board size " +
+                        board.getSize()
+                )
+            );
+        }
+
+        // 6. Null cell
+        try {
+            board.setCell(0, 0, null);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException exception) {
+            assertThat(
+                exception.getMessage(),
+                containsString("Cell cannot be null")
+            );
+        }
     }
 
     @Test
-    void testIsFull() {
+    public void testIsFull() {
         Board board = new Board();
         makeLoserFullBoard(board);
         assertTrue(board.isFull());
     }
 
     @Test
-    void testCorrectCellGeneration() {
+    public void testCorrectCellGeneration() {
         Board board = new Board(new MockRNG(0.9));
         board.initializeEmptyTest();
-
-        // board.setRngStrategy(new MockRNG(0.9));
         board.setCell(0, 0, new Cell(2));
-
         board.moveDown();
         assertEquals(board.getCell(2, 0), new Cell(4));
     }
 
     @Test
-    void testGetScoreNewBoard() {
+    public void testGetScoreNewBoard() {
         Board board = new Board();
         assertEquals(0, board.getScore());
     }
 
     @Test
-    void testGetScoreMergingCells() {
+    public void testGetScoreMergingCells() {
         Board board = new Board();
         board.initializeEmptyTest();
         assertEquals(0, board.getScore());
@@ -242,7 +289,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveUpSingleCellSlidesToTop() {
+    public void testMoveUpSingleCellSlidesToTop() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -252,7 +299,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveUpWithoutChange() {
+    public void testMoveUpWithoutChange() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -265,7 +312,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveUpEqualAdjacentCellsMergesIntoSingleCell() {
+    public void testMoveUpEqualAdjacentCellsMergesIntoSingleCell() {
         Board board = new Board();
         board.initializeEmptyTest();
         board.setCell(3, 0, new Cell(2));
@@ -276,7 +323,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveUpEqualCellsWithEmptySpaceBetween() {
+    public void testMoveUpEqualCellsWithEmptySpaceBetween() {
         Board board = new Board();
         board.initializeEmptyTest();
         board.setCell(3, 3, new Cell(2));
@@ -286,9 +333,8 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveDownSingleCellSlidesToBottom() {
+    public void testMoveDownSingleCellSlidesToBottom() {
         Board board = new Board(new MockRNG());
-        // board.setRngStrategy(new MockRNG());
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
@@ -298,7 +344,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveDownWithoutChanges() {
+    public void testMoveDownWithoutChanges() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -312,7 +358,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveDownEqualAdjacentCellsMergesIntoSingleCell() {
+    public void testMoveDownEqualAdjacentCellsMergesIntoSingleCell() {
         Board board = new Board();
         board.initializeEmptyTest();
         board.setCell(1, 0, new Cell(4));
@@ -323,7 +369,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveDownCellsInDifferentColumnsSlideIndependentlyToBottom() {
+    public void testMoveDownCellsInDifferentColumnsSlideIndependentlyToBottom() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell1 = new Cell(4);
@@ -336,9 +382,8 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveRightSingleCellSlidesToRight() {
+    public void testMoveRightSingleCellSlidesToRight() {
         Board board = new Board(new MockRNG());
-        // board.setRngStrategy(new MockRNG());
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
         board.setCell(0, 0, cell);
@@ -348,7 +393,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveRightWithoutChange() {
+    public void testMoveRightWithoutChange() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -361,7 +406,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveRight_MixedCells_mergesEqualsAndSlidesDistinct() {
+    public void testMoveRight_MixedCells_mergesEqualsAndSlidesDistinct() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -375,7 +420,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveRightMultipleRowsHandlesSlidingAndMergingIndependently() {
+    public void testMoveRightMultipleRowsHandlesSlidingAndMergingIndependently() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -388,7 +433,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveLeftSingleCellSlidesToLeft() {
+    public void testMoveLeftSingleCellSlidesToLeft() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -399,7 +444,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveLeftWithoutChanges() {
+    public void testMoveLeftWithoutChanges() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell = new Cell(2);
@@ -412,7 +457,7 @@ public class BoardTest {
     }
 
     @Test
-    void testMoveLeftDistinctCellsSlidesWithoutMerging() {
+    public void testMoveLeftDistinctCellsSlidesWithoutMerging() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell1 = new Cell(2);
@@ -422,11 +467,10 @@ public class BoardTest {
         board.moveLeft();
         assertEquals(cell2, board.getCell(2, 0));
         assertEquals(cell1, board.getCell(2, 1));
-
     }
 
     @Test
-    void testMoveLeftScatteredCellsSlideIndependentlyToLeft() {
+    public void testMoveLeftScatteredCellsSlideIndependentlyToLeft() {
         Board board = new Board();
         board.initializeEmptyTest();
         Cell cell1 = new Cell(2);
@@ -439,7 +483,7 @@ public class BoardTest {
     }
 
     @Test
-    void testGetEmptyPositions() {
+    public void testGetEmptyPositions() {
         Board board = new Board();
         board.initializeEmptyTest();
 
@@ -456,7 +500,7 @@ public class BoardTest {
     }
 
     @Test
-    void testGetEmptyPositionsFull() {
+    public void testGetEmptyPositionsFull() {
         Board board = new Board();
         makeLoserFullBoard(board);
 
@@ -466,7 +510,7 @@ public class BoardTest {
     }
 
     @Test
-    void testGetEmptyPositionsAllEmpty() {
+    public void testGetEmptyPositionsAllEmpty() {
         Board board = new Board();
         board.initializeEmptyTest();
 
@@ -476,39 +520,34 @@ public class BoardTest {
     }
 
     @Test
-    void testHasEmptyCellsTrue() {
+    public void testHasEmptyCellsTrue() {
         Board board = new Board();
-
         board.initializeEmptyTest();
-
         assertTrue(board.hasEmptyCells());
     }
 
     @Test
-    void testHasEmptyCellsFalse() {
+    public void testHasEmptyCellsFalse() {
         Board board = new Board();
         makeLoserFullBoard(board);
-
         assertFalse(board.hasEmptyCells());
     }
 
     @Test
-    void testIsLosingBoardFalse() {
+    public void testIsLosingBoardFalse() {
         Board board = new Board();
-
         assertFalse(board.isLosingBoard());
     }
 
     @Test
-    void testIsLosingBoardTrue() {
+    public void testIsLosingBoardTrue() {
         Board board = new Board();
         makeLoserFullBoard(board);
-
         assertTrue(board.isLosingBoard());
     }
 
     @Test
-    void testIsLosingBoardMergeRight() {
+    public void testIsLosingBoardMergeRight() {
         Board board = new Board();
         makeLoserFullBoard(board);
 
@@ -519,7 +558,7 @@ public class BoardTest {
     }
 
     @Test
-    void testIsLosingBoardMergeDown() {
+    public void testIsLosingBoardMergeDown() {
         Board board = new Board();
         makeLoserFullBoard(board);
 
@@ -529,18 +568,17 @@ public class BoardTest {
     }
 
     @Test
-    void testIsLosingBoardMergeRightBounds() {
+    public void testIsLosingBoardMergeRightBounds() {
         Board board = new Board();
         makeLoserFullBoard(board);
 
-        // Value in (1,3) is 4, so a down merge is possible
         board.setCell(0, 3, new Cell(4));
 
         assertFalse(board.isLosingBoard());
     }
 
     @Test
-    void testIsWinningBoardReturnsTrue() {
+    public void testIsWinningBoardReturnsTrue() {
         Board board = new Board();
         Cell winnerCell = new Cell(2048);
         board.setCell(0, 0, winnerCell);
@@ -548,33 +586,31 @@ public class BoardTest {
     }
 
     @Test
-    void testIsNotFullBoard() {
+    public void testIsNotFullBoard() {
         Board board = new Board();
         assertFalse(board.isFull());
     }
 
     @Test
-    void testIsWinningBoardReturnsFalse() {
+    public void testIsWinningBoardReturnsFalse() {
         Board board = new Board();
         makeLoserFullBoard(board);
-
         assertFalse(board.isWinningBoard());
     }
 
     @Test
-    void testEqualsShouldBeTrue() {
+    public void testEqualsShouldBeTrue() {
         Board boardA = new Board(4);
         Board boardB = new Board(4);
         makeLoserFullBoard(boardA);
         makeLoserFullBoard(boardB);
 
-        assertAll("Board.equals() should return true",
-                () -> assertEquals(boardA, boardB, "Board A is equals to Board B"),
-                () -> assertEquals(boardB, boardB, "Board B is equals to Board A"));
+        assertEquals("Board A is equals to Board B", boardA, boardB);
+        assertEquals("Board B is equals to Board A", boardB, boardB);
     }
 
     @Test
-    void testEqualsShouldBeFalse() {
+    public void testEqualsShouldBeFalse() {
         Board boardA = new Board(4);
         makeLoserFullBoard(boardA);
 
@@ -592,66 +628,91 @@ public class BoardTest {
         boardD.setCell(0, 0, new Cell(2));
         boardD.setCell(1, 0, new Cell(2));
 
-        Board boardE = new Board(4,1024);
+        Board boardE = new Board(4, 1024);
         makeLoserFullBoard(boardE);
 
-        assertAll("Board.equals() should return false",
-                () -> assertNotEquals(boardA, boardB, "Board A is different to Board B (it has different Cell's)"),
-                () -> assertNotEquals(boardA, boardE, "Board A is different to Board E (it has different WinningValue)"),
-                () -> assertNotEquals(boardA, boardC, "Board A is different to Board C (it has different size)"),
-                () -> assertNotEquals(boardB, boardD, "Board B is different to Board D (it has different score)"),
-                () -> assertNotEquals(boardA, null, "Board A compared with null"),
-                () -> assertNotEquals(boardA, "Some other object", "Board A compared with a non Board object"));
+        assertNotEquals(
+            "Board A is different to Board B (it has different Cell's)",
+            boardA,
+            boardB
+        );
+        assertNotEquals(
+            "Board A is different to Board E (it has different WinningValue)",
+            boardA,
+            boardE
+        );
+        assertNotEquals(
+            "Board A is different to Board C (it has different size)",
+            boardA,
+            boardC
+        );
+        assertNotEquals(
+            "Board B is different to Board D (it has different score)",
+            boardB,
+            boardD
+        );
+        assertNotEquals("Board A compared with null", boardA, null);
+        assertNotEquals(
+            "Board A compared with a non Board object",
+            boardA,
+            "Some other object"
+        );
     }
 
     @Test
-    void testHashCodeShouldBeTrue() {
+    public void testHashCodeShouldBeTrue() {
         Board boardA = new Board(4);
         Board boardB = new Board(4);
         makeLoserFullBoard(boardA);
         makeLoserFullBoard(boardB);
 
-        assertEquals(boardA.hashCode(), boardB.hashCode(), "Board A and Board B should have the same hash code");
+        assertEquals(
+            "Board A and Board B should have the same hash code",
+            boardA.hashCode(),
+            boardB.hashCode()
+        );
     }
 
     @Test
-    void testHashCodeShouldBeFalse() {
+    public void testHashCodeShouldBeFalse() {
         Board boardA = new Board(4);
         Board boardB = new Board(4);
         makeLoserFullBoard(boardA);
         makeLoserFullBoard(boardB);
         boardB.setCell(0, 0, new Cell(8));
 
-        assertNotEquals(boardA.hashCode(), boardB.hashCode(), "Board A and Board B should have different hash codes");
+        assertNotEquals(
+            "Board A and Board B should have different hash codes",
+            boardA.hashCode(),
+            boardB.hashCode()
+        );
     }
 
     @Test
-    void testPositionEqualsShouldBeTrue() {
+    public void testPositionEqualsShouldBeTrue() {
         Board.Position pos1 = new Board.Position(0, 0);
         Board.Position pos2 = new Board.Position(0, 0);
 
-        assertAll("Board.Position.equals() should be true",
-                () -> assertEquals(pos1, pos1, "pos1 is equal to pos1"),
-                () -> assertEquals(pos1, pos2, "pos1 is equal to pos2"));
+        assertEquals("pos1 is equal to pos1", pos1, pos1);
+        assertEquals("pos1 is equal to pos2", pos1, pos2);
     }
 
     @Test
-    void testPositionEqualsShouldNotBeTrue() {
+    public void testPositionEqualsShouldNotBeTrue() {
         Board.Position pos1 = new Board.Position(0, 0);
         Board.Position pos2 = new Board.Position(1, 1);
         Board.Position pos3 = new Board.Position(0, 1);
         Board.Position pos4 = new Board.Position(1, 0);
 
-        assertAll("Board.Position.equals() should be false",
-                () -> assertNotEquals(pos1, null, "pos1 compared with pos2"),
-                () -> assertNotEquals(pos1, "Hola", "pos1 compared with a string"),
-                () -> assertNotEquals(pos1, pos3, "pos1 compared with pos3"),
-                () -> assertNotEquals(pos1, pos4, "pos1 compared with pos4"),
-                () -> assertNotEquals(pos1, pos2, "pos1 compared with pos2"));
+        assertNotEquals("pos1 compared with null", pos1, null);
+        assertNotEquals("pos1 compared with a string", pos1, "Hola");
+        assertNotEquals("pos1 compared with pos3", pos1, pos3);
+        assertNotEquals("pos1 compared with pos4", pos1, pos4);
+        assertNotEquals("pos1 compared with pos2", pos1, pos2);
     }
 
     @Test
-    void testPositionHashCodeEquals() {
+    public void testPositionHashCodeEquals() {
         Board.Position pos1 = new Board.Position(0, 0);
         Board.Position pos2 = new Board.Position(0, 0);
 
@@ -659,7 +720,7 @@ public class BoardTest {
     }
 
     @Test
-    void testPositionHashCodeNotEquals() {
+    public void testPositionHashCodeNotEquals() {
         Board.Position pos1 = new Board.Position(0, 0);
         Board.Position pos2 = new Board.Position(1, 1);
 
@@ -667,33 +728,34 @@ public class BoardTest {
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         Board board = new Board();
         makeLoserFullBoard(board);
         board.setCell(0, 0, Cell.EMPTY);
-        assertEquals("Score: 0\n" + //
-                "+-----+-----+-----+-----+\n" + //
-                "|     |    2|    4|    2|\n" + //
-                "+-----+-----+-----+-----+\n" + //
-                "|    2|    4|    2|    4|\n" + //
-                "+-----+-----+-----+-----+\n" + //
-                "|    4|    2|    4|    2|\n" + //
-                "+-----+-----+-----+-----+\n" + //
-                "|    2|    4|    2|    4|\n" + //
-                "+-----+-----+-----+-----+\n", board.toString());
+        assertEquals(
+            "Score: 0\n" +
+                "+-----+-----+-----+-----+\n" +
+                "|     |    2|    4|    2|\n" +
+                "+-----+-----+-----+-----+\n" +
+                "|    2|    4|    2|    4|\n" +
+                "+-----+-----+-----+-----+\n" +
+                "|    4|    2|    4|    2|\n" +
+                "+-----+-----+-----+-----+\n" +
+                "|    2|    4|    2|    4|\n" +
+                "+-----+-----+-----+-----+\n",
+            board.toString()
+        );
     }
 
     @Test
-    void testPositionToString() {
+    public void testPositionToString() {
         Board.Position position = new Board.Position(0, 0);
-
-        assertEquals(position.toString(), "(0, 0)");
+        assertEquals("(0, 0)", position.toString());
     }
 
     @Test
-    void testRepOk() {
+    public void testRepOk() {
         Board board = new Board();
         assertTrue(board.repOK());
-
     }
 }
