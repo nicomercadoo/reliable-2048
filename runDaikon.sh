@@ -127,9 +127,11 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-# Compatibilidad hacia atrás: si no se indicó acción pero sí suite, asumir --gen
+# Exigir al menos una acción (--gen | --infer | --dump)
 if [ "$ACTION_COUNT" -eq 0 ]; then
-    ACTION_GEN=true
+    echo "Error: Debes especificar al menos una acción (--gen | --infer | --dump)."
+    echo ""
+    usage 1
 fi
 
 # Valores por defecto de suites si no se indicó ninguna
