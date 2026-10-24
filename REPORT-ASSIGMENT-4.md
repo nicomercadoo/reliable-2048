@@ -11,7 +11,7 @@ El script `runDaikon.sh` unifica y automatiza el ciclo de vida completo de anál
 ./runDaikon.sh [ACCIONES] [SUITES]
 ```
 
-#### Opciones de Acción
+#### Opciones de Acción (Obligatorio: especificar al menos una)
 - `--gen`: Genera trazas de ejecución (`.dtrace.gz`).
 - `--infer`: Infiere invariantes a partir de las trazas (`.inv.gz`).
 - `--dump [<archivo>]`: Vuelca invariantes legibles a un archivo de texto (por defecto `daikon-output.txt` o `daikon-output-<suite>.txt`).
