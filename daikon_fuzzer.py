@@ -34,6 +34,7 @@ for i in range(TRIALS):
         "daikon.Chicory",
         f"--dtrace-file={trace_file}",
         "--ppt-select-pattern=ar.edu.unrc.game2048.Board|ar.edu.unrc.game2048.Cell|ar.edu.unrc.game2048.MockRNG|ar.edu.unrc.game2048.MathUtils",
+        "--ppt-omit-pattern='.*Test.*'",
         "ar.edu.unrc.game2048.MainCLI"
     ]
 
