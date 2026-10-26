@@ -29,6 +29,7 @@ usage() {
     echo "  --manual              Aplica sobre tests manuales (CellTest, BoardTest)"
     echo "  --randoop             Aplica sobre tests de Randoop"
     echo "  --evosuite            Aplica sobre tests de EvoSuite"
+    echo "  --fuzzer              Aplica sobre tests de Fuzzer"
     echo "  --combined            Aplica sobre la traza combinada (daikon-traces/output.inv.gz)"
     echo "  --all                 Aplica sobre todas las suites disponibles"
     echo "  -h, --help            Muestra este mensaje de ayuda"
@@ -62,6 +63,7 @@ DUMP_FILE=""
 TARGET_MANUAL=false
 TARGET_RANDOOP=false
 TARGET_EVOSUITE=false
+TARGET_FUZZER=false
 TARGET_COMBINED=false
 TARGET_ALL=false
 
@@ -103,6 +105,11 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         --evosuite)
             TARGET_EVOSUITE=true
+            TARGET_COUNT=$((TARGET_COUNT + 1))
+            shift
+            ;;
+        --fuzzer)
+            TARGET_FUZZER=true
             TARGET_COUNT=$((TARGET_COUNT + 1))
             shift
             ;;
@@ -243,6 +250,21 @@ run_gen_evosuite() {
         exit 1
     fi
 }
+run_gen_fuzzer() {
+    init_classpath
+    echo ""
+    echo "======================================================================"
+    echo " [GEN] Generando trazas: Fuzzer"
+    echo " Archivo destino: $OUTPUT_DIR/fuzzer_runs/"
+    echo "======================================================================"
+    rm -f "$OUTPUT_DIR"/fuzzer_runs/*.dtrace.gz
+    PPT_SELECT="$PPT_SELECT" PPT_OMIT="$PPT_OMIT" python3 daikon_fuzzer.py
+    shopt -s nullglob
+    local traces=("$OUTPUT_DIR"/fuzzer_runs/*.dtrace.gz)
+    shopt -u nullglob
+    if [ "${#traces[@]}" -eq 0 ]; then echo "Error: sin trazas del Fuzzer"; exit 1; fi
+    echo "--> ${#traces[@]} trazas del Fuzzer ($(du -ch "${traces[@]}" | tail -1 | cut -f1))"
+}
 
 # ==============================================================================
 # 2. FUNCIONES DE INFERENCIA DE INVARIANTES (--infer)
@@ -298,9 +320,17 @@ run_infer_evosuite() {
     run_infer_file "Tests EvoSuite" "$OUTPUT_DIR/evosuite.inv.gz" "$OUTPUT_DIR/evosuite.dtrace.gz"
 }
 
+run_infer_fuzzer() {
+    shopt -s nullglob
+    local traces=("$OUTPUT_DIR"/fuzzer_runs/*.dtrace.gz)
+    shopt -u nullglob
+    [ "${#traces[@]}" -gt 0 ] || { echo "Ejecuta primero: $0 --gen --fuzzer"; exit 1; }
+    run_infer_file "Fuzzer" "$OUTPUT_DIR/fuzzer.inv.gz" "${traces[@]}"
+}
+
 run_infer_combined() {
     shopt -s nullglob
-    local traces=("$OUTPUT_DIR"/*.dtrace.gz)
+    local traces=("$OUTPUT_DIR"/*.dtrace.gz "$OUTPUT_DIR"/fuzzer_runs/*.dtrace.gz)
     shopt -u nullglob
 
     if [ "${#traces[@]}" -eq 0 ]; then
@@ -356,6 +386,9 @@ if [ "$ACTION_GEN" = true ]; then
     if [ "$TARGET_EVOSUITE" = true ] || [ "$TARGET_ALL" = true ]; then
         run_gen_evosuite
     fi
+    if [ "$TARGET_FUZZER" = true ] || [ "$TARGET_ALL" = true ]; then
+        run_gen_fuzzer
+    fi
 fi
 
 # Paso 2: Inferencia de Invariantes (--infer)
@@ -372,10 +405,14 @@ if [ "$ACTION_INFER" = true ]; then
     if [ "$TARGET_COMBINED" = true ]; then
         run_infer_combined
     fi
+    if [ "$TARGET_FUZZER" = true ]; then
+        run_infer_fuzzer
+    fi
     if [ "$TARGET_ALL" = true ]; then
         run_infer_manual
         run_infer_randoop
         run_infer_evosuite
+        run_infer_fuzzer
         run_infer_combined
     fi
 fi
@@ -392,6 +429,9 @@ if [ "$ACTION_DUMP" = true ]; then
     elif [ "$TARGET_EVOSUITE" = true ]; then
         target_dest="${DUMP_FILE:-daikon-output-evosuite.txt}"
         run_dump_file "$OUTPUT_DIR/evosuite.inv.gz" "$target_dest"
+    elif [ "$TARGET_FUZZER" = true ]; then
+        target_dest="${DUMP_FILE:-daikon-output-fuzzer.txt}"
+        run_dump_file "$OUTPUT_DIR/fuzzer.inv.gz" "$target_dest"
     elif [ "$TARGET_ALL" = true ] && [ -z "$DUMP_FILE" ]; then
         # Volcar todas las disponibles con sus nombres respectivos
         if [ -f "$OUTPUT_DIR/manual.inv.gz" ]; then
@@ -402,6 +442,9 @@ if [ "$ACTION_DUMP" = true ]; then
         fi
         if [ -f "$OUTPUT_DIR/evosuite.inv.gz" ]; then
             run_dump_file "$OUTPUT_DIR/evosuite.inv.gz" "daikon-output-evosuite.txt"
+        fi
+        if [ -f "$OUTPUT_DIR/fuzzer.inv.gz" ]; then
+            run_dump_file "$OUTPUT_DIR/fuzzer.inv.gz" "daikon-output-fuzzer.txt"
         fi
         if [ -f "$OUTPUT_DIR/output.inv.gz" ]; then
             run_dump_file "$OUTPUT_DIR/output.inv.gz" "daikon-output.txt"

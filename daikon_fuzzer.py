@@ -5,11 +5,10 @@ import time
 
 import fuzzer
 
-TRIALS = 50  # 30 partidas dan miles de puntos de programa sin demorar horas
+TRIALS = 50
 TRACES_DIR = "daikon-traces/fuzzer_runs"
 os.makedirs(TRACES_DIR, exist_ok=True)
 
-# 1. Configurar el fuzzer con los rangos válidos para repOK()
 rf = fuzzer.RandomFuzzer(
     min_length=20,
     max_length=100,
@@ -28,7 +27,6 @@ successful_traces = []
 for i in range(TRIALS):
     trace_file = os.path.join(TRACES_DIR, f"run_{i:03d}.dtrace.gz")
 
-    # Si la traza ya existe de una corrida previa, la removemos
     if os.path.exists(trace_file):
         os.remove(trace_file)
 
