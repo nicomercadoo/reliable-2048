@@ -130,6 +130,85 @@ La sintaxis general acepta combinaciones de acciones y suites:
 
 ---
 
+### Inspección y Comentarios Interactivos con `daikon_analysis_utility.py` (`dau.py`)
+
+CLI interactiva para navegar, clasificar y añadir comentarios sobre cada invariante, precondición o postcondición generada por Daikon.
+- **Acceso rápido**: Puede ejecutarse como `./daikon_analysis_utility.py` o mediante su alias corto `./dau.py`.
+- **Sincronización dual**: Los comentarios se guardan al final de la línea en `daikon-output.txt` con el formato `# comentario` (preservando el número exacto de línea y generando un `.bak` de resguardo) y se exportan por defecto a un reporte Markdown enriquecido (`daikon-output.md`).
+- **Enlaces directos a líneas**: Cada línea y propiedad en el reporte `.md` es un enlace clickeable que apunta a su línea exacta en el archivo de texto (por ejemplo `daikon-output.txt#L111`).
+- **Resolución de discrepancias / conflictos**: Si al iniciar la herramienta se detectan diferencias entre los comentarios presentes en el archivo `.txt` y en el archivo `.md`, la CLI alerta al usuario y le pregunta cuál archivo tiene preferencia (o mediante la opción `--prefer md` / `--prefer txt`).
+
+```bash
+# Iniciar la interfaz interactiva (lee daikon-output.txt y guarda en daikon-output.md):
+./daikon_analysis_utility.py       # o: ./dau.py
+
+# Iniciar sobre un archivo específico y/o exportar a otro destino:
+./daikon_analysis_utility.py daikon-output-manual.txt -o mi-reporte.md
+
+# Exportar el reporte Markdown sin entrar a la TUI:
+./daikon_analysis_utility.py --export-md
+
+# Ver estadísticas de progreso de comentarios:
+./daikon_analysis_utility.py --stats
+
+# Exportar todas las propiedades y comentarios a JSON:
+./daikon_analysis_utility.py --export-json daikon-data.json
+```
+
+**Modo Vim y Controles en la CLI:**
+
+La interfaz interactiva opera con una máquina modal inspirada en Vim:
+
+1. **Modo NORMAL (`NORMAL`)**:
+   - `j` / `k` (o `DOWN` / `UP`): Moverse al invariante siguiente / anterior.
+   - `h` / `l` (o `[` / `]` o `PgUp` / `PgDn`): Moverse al scope (clase o método) anterior / siguiente.
+   - `gg`: Saltar al primer invariante del scope actual.
+   - `G`: Saltar al último invariante del scope actual.
+   - `1` .. `5`: **Clasificación instantánea con una sola tecla** (clasifica el invariante y avanza automáticamente al siguiente):
+     - `1`: `Correct and useful`
+     - `2`: `Correct but trivial`
+     - `3`: `Too strong / likely spurious`
+     - `4`: `Incorrect`
+     - `5`: `Precondition violation / Unreachable`
+   - `p` (o `Ctrl+P` / `Ctrl+U`): Saltar a la siguiente propiedad **p**endiente (sin comentar).
+   - `P`: Saltar a la propiedad pendiente anterior.
+   - `x` o `dd`: Borrar el comentario de la propiedad seleccionada.
+   - `u`: **Deshacer** (*undo*) la última modificación o borrado de comentario.
+   - `r` (o `Ctrl+R`): **Rehacer** (*redo*) la última modificación deshecha.
+   - `i` o `Enter`: Entrar en modo **INSERT** para editar el comentario.
+   - `a`: Entrar en modo **INSERT** al final del texto actual.
+   - `c` o `o`: Limpiar comentario anterior y entrar en modo **INSERT**.
+   - `:`: Entrar en modo **COMMAND** (línea de comandos).
+   - `/` (o `Ctrl+F`): Entrar en modo **SEARCH** (búsqueda).
+
+2. **Modo Edición (`INSERT`)**:
+   - Escritura de texto para el comentario de la propiedad seleccionada.
+   - Atajos de autoexpansión inline: tipear `:1`..`:5` o `:us`, `:tr`, `:sp`, `:inc`, `:un` se expande instantáneamente al texto de la clasificación.
+   - `ENTER`: Guardar comentario actual en `.txt` y `.md`, y avanzar al siguiente invariante (manteniéndose en modo `INSERT` para permitir comentar en ráfaga).
+   - `SHIFT+ENTER` (o `Alt+Enter`): Insertar salto de línea dentro del comentario.
+   - `ESC`: Volver a modo **NORMAL**.
+
+3. **Modo Comandos (`COMMAND`, `:`)**:
+   - `:w`: Guardar cambios sincronizados en `daikon-output.txt` y `daikon-output.md`.
+   - `:w <archivo>`: Guardar en un archivo alternativo.
+   - `:q`: Salir de la CLI.
+   - `:wq` o `:x`: Guardar y salir.
+   - `:q!`: Salir descartando cambios pendientes en memoria.
+   - `:<NUM>` (ej: `:120`): Saltar directamente a la línea `<NUM>` en `daikon-output.txt`.
+   - `:1` .. `:5` o `:us` .. `:un`: Clasificar el invariante actual y avanzar.
+   - `:undo` / `:redo`: Deshacer y rehacer cambios desde la barra de comandos.
+   - `:stats`: Ver resumen de progreso y estadísticas.
+   - `ESC`: Cancelar comando y volver a modo **NORMAL**.
+
+4. **Modo Búsqueda (`SEARCH`, `/`)**:
+   - `/` seguido del término de búsqueda o número de línea.
+   - `j` / `k` (o `DOWN` / `UP`): Navegar entre los resultados coincidentes.
+   - `ENTER`: Saltar al invariante seleccionado y volver a modo **NORMAL**.
+   - `ESC`: Cancelar búsqueda y volver a modo **NORMAL**.
+
+
+---
+
 ## Ejecución de Tests con Maven (Surefire)
 
 El proyecto utiliza **Maven Surefire** configurado en distintos perfiles (*profiles*) para no cruzar dependencias.
