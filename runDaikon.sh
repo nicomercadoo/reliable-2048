@@ -155,9 +155,8 @@ if [ "$TARGET_COUNT" -eq 0 ]; then
     fi
 fi
 
-PPT_SELECT="ar\.edu\.unrc\.game2048\.(Board|Cell|MockRNG|MathUtils)(\.|\:\:)"
-PPT_OMIT=".*Test.*"
-
+PPT_SELECT="ar\.edu\.unrc\.game2048\.(Board|Cell)(\.|\:\:)"
+PPT_OMIT=".*Test.*|.*Board.Position.*|.*\.(toString|hashCode)\(.*|.*MockRNG.*"
 # ==============================================================================
 # 1. FUNCIONES DE GENERACIÓN DE TRAZAS (--gen)
 # ==============================================================================
@@ -237,6 +236,7 @@ run_gen_evosuite() {
     JDK_JAVA_OPTIONS="-Djava.security.manager=allow --add-opens java.desktop/java.awt=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-exports java.base/sun.net.util=ALL-UNNAMED" \
     java -cp "$CLASSPATH" \
       daikon.Chicory \
+      --sample-start=100 \
       --ppt-select-pattern="$PPT_SELECT" \
       --ppt-omit-pattern="$PPT_OMIT" \
       --output-dir="$OUTPUT_DIR" \
@@ -283,8 +283,9 @@ run_infer_file() {
     echo "======================================================================"
 
     mkdir -p "$OUTPUT_DIR"
-    java -Xmx4g -cp "$DAIKON_JAR" daikon.Daikon -o "$output_inv" "${input_traces[@]}"
-
+        java -Xmx4g -cp "$DAIKON_JAR" daikon.Daikon \
+             --ppt-omit-pattern="$PPT_OMIT" \
+             -o "$output_inv" "${input_traces[@]}"
     if [ -f "$output_inv" ]; then
         echo "--> Invariantes inferidos exitosamente: $output_inv ($(du -h "$output_inv" | cut -f1))"
     else
