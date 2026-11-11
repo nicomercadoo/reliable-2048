@@ -9,8 +9,9 @@ classifies the outcome.  The two are kept separate so that different fuzzers
 can be combined with the same runner, and vice-versa.
 """
 
-import subprocess
+import math
 import random
+import subprocess
 from typing import Tuple
 
 # ---------------------------------------------------------------------------
@@ -94,7 +95,8 @@ class Fuzzer:
 
 class RandomFuzzer(Fuzzer):
     """
-    Generates a random sequence of game moves followed by a quit command.
+    Generates valid board configurations respecting repOK() and a sequence
+    of random game moves followed by a quit command.
 
     Parameters
     ----------
@@ -102,30 +104,73 @@ class RandomFuzzer(Fuzzer):
         Minimum number of move keys in the sequence.
     max_length : int
         Maximum number of move keys in the sequence.
+    min_size : int
+        Minimum board size (must be >= 1).
+    max_size : int
+        Maximum board size.
+    min_winning_value : int
+        Minimum winning value (must be >= 2).
+    max_winning_value : int
+        Maximum winning value.
     """
 
-    def __init__(self, min_length: int = 10, max_length: int = 50):
+    def __init__(
+        self,
+        min_length: int = 10,
+        max_length: int = 50,
+        min_size: int = 3,
+        max_size: int = 6,
+        min_winning_value: int = 128,
+        max_winning_value: int = 2048
+    ):
         self.min_length = min_length
         self.max_length = max_length
+        self.min_size = max(1, min_size)
+        self.max_size = max(self.min_size, max_size)
+        self.min_winning_value = max(2, min_winning_value)
+        self.max_winning_value = max(self.min_winning_value, max_winning_value)
+
+        # Generar las potencias de 2 disponibles en el rango [min_winning_value, max_winning_value]
+        min_exp = max(1, math.ceil(math.log2(self.min_winning_value)))
+        max_exp = max(min_exp, math.floor(math.log2(self.max_winning_value)))
+        self.valid_winning_values = [2 ** k for k in range(min_exp, max_exp + 1)]
+
+    def _generate_valid_config(self) -> Tuple[int, int]:
+        """
+        Selecciona un winning_value y un size que satisfacen repOK():
+        - winning_value > 0 y potencia de 2
+        - size > 0
+        - size^2 >= log2(winning_value)
+        """
+        # Filtramos qué winning_values son compatibles con max_size
+        compatible_targets = [
+            val for val in self.valid_winning_values
+            if math.ceil(math.sqrt(math.log2(val))) <= self.max_size
+        ]
+
+        if not compatible_targets:
+            raise ValueError(
+                f"No es posible cumplir validSize: max_size={self.max_size} no alcanza "
+                f"para la meta mínima ({self.valid_winning_values[0]}). Aumenta max_size o baja min_winning_value."
+            )
+
+        winning_val = random.choice(compatible_targets)
+        min_allowed_size = max(self.min_size, math.ceil(math.sqrt(math.log2(winning_val))))
+        size = random.randint(min_allowed_size, self.max_size)
+
+        return size, winning_val
 
     def fuzz(self) -> str:
         """
-        TODO: Implement this method.
-
-        Return a string representing a sequence of moves for the 2048 CLI.
-        Each key must be on its own line (followed by '\\n').
-        The sequence must end with the quit key ('q') on its own line.
-
-        Use `self.min_length` and `self.max_length` to decide how many moves
-        to generate, and pick keys randomly from the KEYS list.
-
-        Example output for a sequence of 3 moves:
-            'w\\na\\nd\\nq\\n'
+        Devuelve el input completo para el CLI:
+        size -> winningValue -> movimientos -> quit.
         """
+        size, winning_value = self._generate_valid_config()
         moves = random.choices(KEYS, k=random.randint(self.min_length, self.max_length))
 
-        output = "4\n2048\n" + "\n".join(moves) + "\n" + "\n".join(QUIT)      
+        output = f"{size}\n{winning_value}\n" + "\n".join(moves) + f"\n{QUIT}\n"
         return output
+
 
 # ---------------------------------------------------------------------------
 # Main: run the fuzzer and report results
@@ -133,7 +178,14 @@ class RandomFuzzer(Fuzzer):
 
 def main():
     runner = CLIRunner()
-    fuzzer = RandomFuzzer(min_length=10, max_length=50)
+    fuzzer = RandomFuzzer(
+        min_length=10,
+        max_length=50,
+        min_size=3,
+        max_size=6,
+        min_winning_value=128,
+        max_winning_value=2048
+    )
 
     trials = 20
     outcomes = {PASS: 0, FAIL: 0, UNRESOLVED: 0}
