@@ -124,6 +124,13 @@ class ScopeSection:
 def extract_prop_from_cell(cell_text: str) -> str:
     """Extracts property text from markdown table cell which may contain links or backticks."""
     cell = cell_text.strip()
+    if cell.startswith("[") and cell.endswith(")"):
+        idx = cell.rfind("](")
+        if idx != -1:
+            inner = cell[1:idx].strip()
+            if inner.startswith("`") and inner.endswith("`"):
+                inner = inner[1:-1].strip()
+            return inner
     m = re.search(r"\[`?([^`\]]+)`?\]\(.*?\)", cell)
     if m:
         return m.group(1).strip()
@@ -1982,18 +1989,16 @@ def export_markdown(
 
         lines.append(f"**Kind:** {s.kind}")
         lines.append("")
-        lines.append("| Line | Invariant Property | Comment / Analysis |")
-        lines.append("| :---: | :--- | :--- |")
+        lines.append("| Invariant Property | Comment / Analysis |")
+        lines.append("| :--- | :--- |")
         for inv in commented:
             inv_text = inv.text.replace("|", "\\|")
             comment_text = "<br>".join(c.replace("|", "\\|") for c in inv.comments)
             if inv.line_number:
-                line_link = f"[{inv.line_number}]({rel_txt}#L{inv.line_number})"
                 prop_link = f"[`{inv_text}`]({rel_txt}#L{inv.line_number})"
             else:
-                line_link = "-"
                 prop_link = f"`{inv_text}`"
-            lines.append(f"| {line_link} | {prop_link} | {comment_text} |")
+            lines.append(f"| {prop_link} | {comment_text} |")
         lines.append("")
 
     if not has_any_commented:

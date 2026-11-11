@@ -153,6 +153,27 @@ class TestDaikonCLI(unittest.TestCase):
         self.assertIn("# Daikon Invariants Annotation Report", content)
         self.assertIn("ar.edu.unrc.game2048.Board.Board():::EXIT", content)
         self.assertIn("this was already commented", content)
+        # Verify table has 2 columns (no 'Line' column)
+        self.assertIn("| Invariant Property | Comment / Analysis |", content)
+        self.assertNotIn("| Line |", content)
+
+        # Verify round-trip parsing of the 2-column table
+        parsed = parse_md_comments(md_file)
+        self.assertIn("ar.edu.unrc.game2048.Board.Board():::EXIT", parsed)
+        exit_comments = parsed["ar.edu.unrc.game2048.Board.Board():::EXIT"]
+        self.assertIn("ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size", exit_comments)
+        self.assertEqual(
+            exit_comments["ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size"],
+            ["this was already commented"],
+        )
+        self.assertIn(
+            "ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[])", exit_comments
+        )
+        self.assertEqual(
+            exit_comments["ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[])"],
+            ["this was already commented", "multiline note"],
+        )
+
         if os.path.exists(md_file):
             os.remove(md_file)
 

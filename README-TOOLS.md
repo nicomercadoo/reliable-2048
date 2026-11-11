@@ -135,7 +135,7 @@ La sintaxis general acepta combinaciones de acciones y suites:
 CLI interactiva para navegar, clasificar y añadir comentarios sobre cada invariante, precondición o postcondición generada por Daikon.
 - **Acceso rápido**: Puede ejecutarse como `./daikon_analysis_utility.py` o mediante su alias corto `./dau.py`.
 - **Sincronización dual**: Los comentarios se guardan al final de la línea en `daikon-output.txt` con el formato `# comentario` (preservando el número exacto de línea y generando un `.bak` de resguardo) y se exportan por defecto a un reporte Markdown enriquecido (`daikon-output.md`).
-- **Enlaces directos a líneas**: Cada línea y propiedad en el reporte `.md` es un enlace clickeable que apunta a su línea exacta en el archivo de texto (por ejemplo `daikon-output.txt#L111`).
+- **Enlaces directos a líneas**: Cada propiedad en las tablas del reporte `.md` es un enlace clickeable que apunta a su línea exacta en el archivo de texto (por ejemplo `daikon-output.txt#L111`).
 - **Resolución de discrepancias / conflictos**: Si al iniciar la herramienta se detectan diferencias entre los comentarios presentes en el archivo `.txt` y en el archivo `.md`, la CLI alerta al usuario y le pregunta cuál archivo tiene preferencia (o mediante la opción `--prefer md` / `--prefer txt`).
 
 ```bash
