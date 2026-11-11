@@ -27,7 +27,7 @@ Generated from [`daikon-output.txt`](daikon-output.txt).
 | [`this.size >= 0`](daikon-output.txt#L8) | Correct but trivial |
 | [`this.grid.getClass().getName() == ar.edu.unrc.game2048.Cell[][].class`](daikon-output.txt#L9) | Correct but trivial |
 | [`this.grid[] elements != null`](daikon-output.txt#L10) | Correct but trivial |
-| [`this.score >= 0`](daikon-output.txt#L11) | Correct but trivial |
+| [`this.score >= 0`](daikon-output.txt#L11) | Correct and useful |
 | [`size(this.grid[]) >= 1`](daikon-output.txt#L12) | Correct but trivial |
 | [`ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.winningValue`](daikon-output.txt#L13) | Incorrect |
 | [`this.score % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0`](daikon-output.txt#L14) | Incorrect |

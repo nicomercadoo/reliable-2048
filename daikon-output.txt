@@ -8,7 +8,7 @@ this.winningValue is a power of 2 # Correct and useful
 this.size >= 0 # Correct but trivial
 this.grid.getClass().getName() == ar.edu.unrc.game2048.Cell[][].class # Correct but trivial
 this.grid[] elements != null # Correct but trivial
-this.score >= 0 # Correct but trivial
+this.score >= 0 # Correct and useful
 size(this.grid[]) >= 1 # Correct but trivial
 ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.winningValue # Incorrect
 this.score % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
