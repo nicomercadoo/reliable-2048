@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0</junit.version>
         <evosuiteVersion>1.0.6</evosuiteVersion>
+        <toolsjar>${java.home}/../lib/tools.jar</toolsjar>
     </properties>
 
     <dependencies>

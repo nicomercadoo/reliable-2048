@@ -1,0 +1,1436 @@
+===========================================================================
+ar.edu.unrc.game2048.Board:::CLASS
+===========================================================================
+ar.edu.unrc.game2048.Board:::OBJECT
+this.size == size(this.grid[])
+this.winningValue >= 1 # Correct but trivial
+this.winningValue is a power of 2 # Correct and useful
+this.size >= 0 # Correct but trivial
+this.grid.getClass().getName() == ar.edu.unrc.game2048.Cell[][].class # Correct but trivial
+this.grid[] elements != null # Correct but trivial
+this.score >= 0 # Correct and useful
+size(this.grid[]) >= 1 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.winningValue # Incorrect
+this.score % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.score # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= size(this.grid[]) # Too strong / likely spurious
+this.winningValue != size(this.grid[])-1 # Incorrect
+this.grid.getClass().getName() != this.rngStrategy.getClass().getName() # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.Board():::EXIT
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[]) # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Correct but trivial
+this.grid != null # Correct but trivial
+this.score == 0 # Correct but trivial
+this.rngStrategy != null # Incorrect
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(ar.edu.unrc.game2048.Board):::ENTER
+other.size == size(other.grid[]) # Correct but trivial
+other != null # Correct but trivial
+other.winningValue >= 1 # Correct but trivial
+other.winningValue is a power of 2 # Correct but trivial
+other.grid != null # Correct but trivial
+other.grid.getClass().getName() == ar.edu.unrc.game2048.Cell[][].class # Correct but trivial
+other.grid[] elements != null # Correct but trivial
+other.score >= 0 # Correct but trivial
+other.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != other.winningValue # Incorrect
+other.score % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > other.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > other.score # Incorrect
+other.winningValue >= other.size # Correct but trivial
+other.grid.getClass().getName() != other.rngStrategy.getClass().getName() # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(ar.edu.unrc.game2048.Board):::EXIT
+this.winningValue == other.winningValue # Correct but trivial
+this.winningValue == orig(other.winningValue) # Correct but trivial
+this.size == other.size # Correct but trivial
+this.size == orig(other.size) # Correct but trivial
+this.size == size(other.grid[]) # Correct but trivial
+this.size == orig(size(other.grid[])) # Correct but trivial
+this.grid.getClass().getName() == other.grid.getClass().getName() # Correct but trivial
+this.grid.getClass().getName() == orig(other.grid.getClass().getName()) # Correct but trivial
+this.score == other.score # Correct but trivial
+this.score == orig(other.score) # Correct but trivial
+this.rngStrategy == other.rngStrategy # Correct but trivial
+this.rngStrategy == orig(other.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == other.rngStrategy.getClass().getName() # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(other.rngStrategy.getClass().getName()) # Correct but trivial
+other.grid == orig(other.grid) # Correct but trivial
+other.grid[] == orig(other.grid[]) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+other.grid != null # Correct but trivial
+other.grid[] elements != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+this.winningValue >= this.size # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(ar.edu.unrc.game2048.RNGStrategy, int, int):::ENTER
+rng != null # Correct but trivial
+size >= 1 # Correct but trivial
+winningValue >= 1 # Correct but trivial
+winningValue is a power of 2 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(ar.edu.unrc.game2048.RNGStrategy, int, int):::EXIT
+this.winningValue == orig(winningValue) # Correct but trivial
+this.size == orig(size) # Correct but trivial
+this.rngStrategy == orig(rng) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(rng.getClass().getName()) # Correct but trivial
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+this.score == 0 # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+this.winningValue > this.score # Incorrect
+this.score <= size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(int):::ENTER
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(int):::EXIT
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Correct but trivial
+this.size == orig(size) # Incorrect
+this.grid != null # Correct but trivial
+this.score == 0 # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE <= this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.score < size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(int, int):::ENTER
+size >= 1 # Correct but trivial
+winningValue >= 1 # Correct but trivial
+winningValue is a power of 2 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.Board(int, int):::EXIT
+this.winningValue == orig(winningValue) # Incorrect
+this.size == orig(size) # Incorrect
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+this.score == 0 # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue > this.score # Correct but trivial
+this.score <= size(this.grid[])-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::ENTER
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::EXIT507
+this.score == size(this.grid[])-1 # Incorrect
+this.score == orig(size(this.grid[]))-1 # Incorrect
+this.grid[this.size-1] == this.grid[this.score] # Incorrect
+orig(this.grid[post(this.size)-1]) == this.grid[this.score] # Incorrect
+this.grid[this.score] == this.grid[orig(this.size)-1] # Incorrect
+this.grid[this.score] == orig(this.grid[this.size-1]) # Incorrect
+this.winningValue one of { 1, 2 } # Too strong / likely spurious
+this.size == 1 # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == false # Incorrect
+this.grid[] elements == this.grid[this.score] # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::EXIT507;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::EXIT518
+return == true # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::EXIT518;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (this.grid[] elements == orig(this.grid[post(this.score)])) # Incorrect
+(return == false)  ==>  (this.grid[] elements == orig(this.grid[this.score])) # Incorrect
+(return == false)  ==>  (this.grid[] elements == this.grid[orig(this.score)]) # Incorrect
+(return == false)  ==>  (this.grid[] elements == this.grid[this.score]) # Incorrect
+(return == false)  ==>  (this.grid[] elements == this.grid[this.size-1]) # Incorrect
+(return == false)  ==>  (this.grid[this.size-1] == this.grid[this.score]) # Incorrect
+(return == false)  ==>  (this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class) # Correct but trivial
+(return == false)  ==>  (this.score == size(this.grid[])-1) # Incorrect
+(return == false)  ==>  (this.size == 1) # Too strong / likely spurious
+(return == false)  ==>  (this.winningValue one of { 1, 2 }) # Too strong / likely spurious
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::EXIT;condition="return == true"
+return == true # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.addRandomTile():::EXIT;condition="not(return == true)"
+this.score == size(this.grid[])-1 # Incorrect
+this.score == orig(size(this.grid[]))-1 # Incorrect
+this.grid[this.size-1] == this.grid[this.score] # Incorrect
+orig(this.grid[post(this.size)-1]) == this.grid[this.score] # Incorrect
+this.grid[this.score] == this.grid[orig(this.size)-1] # Incorrect
+this.grid[this.score] == orig(this.grid[this.size-1]) # Incorrect
+this.winningValue one of { 1, 2 } # Too strong / likely spurious
+this.size == 1 # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == false # Correct but trivial
+this.grid[] elements == this.grid[this.score] # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+this.winningValue >= this.size # Correct but trivial
+this.grid.getClass().getName() != o.getClass().getName() # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT533
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(this.size) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[]) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(size(this.grid[])) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == orig(this.winningValue) # Too strong / likely spurious
+orig(this) == orig(o) # Incorrect
+this.score == 0 # Incorrect
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Incorrect
+return == true # Incorrect
+orig(o.getClass().getName()) == ar.edu.unrc.game2048.Board.class # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT533;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT535
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(this.size) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[]) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(size(this.grid[])) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == orig(this.winningValue) # Too strong / likely spurious
+this.score one of { 0, 4, 16 } # Too strong / likely spurious
+return == false # Incorrect
+this.score != size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT535;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT537
+(return == true)  ==>  (this.winningValue != this.score) # Incorrect
+(return == true)  ==>  (this.winningValue >= 1) # Correct but trivial
+orig(o) != null # Incorrect
+orig(o.getClass().getName()) == ar.edu.unrc.game2048.Board.class # Correct but trivial
+this.rngStrategy.getClass().getName() != orig(o.getClass().getName()) # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT537;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT537;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == true)  ==>  (orig(o) != null) # Correct but trivial
+(return == true)  ==>  (orig(o.getClass().getName()) == ar.edu.unrc.game2048.Board.class) # Correct but trivial
+(return == true)  ==>  (this.rngStrategy.getClass().getName() != orig(o.getClass().getName())) # Correct but trivial
+(return == true)  ==>  (this.winningValue != this.score) # Incorrect
+(return == true)  ==>  (this.winningValue >= 1) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+this.winningValue >= this.size # Correct but trivial
+this.grid.getClass().getName() != orig(o.getClass().getName()) # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT;condition="return == true"
+return == true # Correct but trivial
+orig(o) != null # Correct but trivial
+orig(o.getClass().getName()) == ar.edu.unrc.game2048.Board.class # Correct but trivial
+this.winningValue != this.score # Incorrect
+this.rngStrategy.getClass().getName() != orig(o.getClass().getName()) # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.equals(java.lang.Object):::EXIT;condition="not(return == true)"
+return == false # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.getCell(int, int):::ENTER
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[]) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+row >= 0 # Correct but trivial
+col >= 0 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > row # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > col # Correct but trivial
+this.score != size(this.grid[])-1 # Incorrect
+row <= size(this.grid[])-1 # Correct but trivial
+col <= size(this.grid[])-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.getCell(int, int):::EXIT
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[]) # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Too strong / likely spurious
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+return != null # Correct but trivial
+return.value >= 0 # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY != null # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == 0 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > return.value # Too strong / likely spurious
+this.score >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+this.score != size(this.grid[])-1 # Correct but trivial
+return.value >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+return.value != size(this.grid[])-1 # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value <= orig(row) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value <= orig(col) # Correct but trivial
+orig(row) <= size(this.grid[])-1 # Correct but trivial
+orig(col) <= size(this.grid[])-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.getEmptyPositions():::ENTER
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.getEmptyPositions():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+return != null # Correct but trivial
+return.getClass().getName() == java.util.HashSet.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+this.grid.getClass().getName() != return.getClass().getName() # Correct but trivial
+this.rngStrategy.getClass().getName() != return.getClass().getName() # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.getScore():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Correct but trivial
+this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Correct but trivial
+this.winningValue >= this.size # Correct but trivial
+this.winningValue != this.score # Correct but trivial
+this.score != size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.getScore():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == return # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+return == orig(this.score) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+return >= 0 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Correct but trivial
+this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+return % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > return # Too strong / likely spurious
+this.winningValue >= this.size # Correct but trivial
+this.winningValue != return # Correct but trivial
+return != size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.getSize():::ENTER
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+this.winningValue >= this.size # Correct but trivial
+this.winningValue > this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.getSize():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == return # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+return == orig(this.size) # Correct but trivial
+return == size(this.grid[]) # Correct but trivial
+return == orig(size(this.grid[])) # Correct but trivial
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > return # Too strong / likely spurious
+this.winningValue > this.score # Incorrect
+this.winningValue >= return # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.hasEmptyCells():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+this.winningValue >= this.size # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.hasEmptyCells():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.score) # Incorrect
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.size) # Incorrect
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE % this.winningValue == 0) # Incorrect
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue) # Incorrect
+(return == false)  ==>  (this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class) # Incorrect
+(return == false)  ==>  (this.size != this.score) # Incorrect
+(return == false)  ==>  (this.size one of { 1, 3, 4 }) # Too strong / likely spurious
+(return == false)  ==>  (this.winningValue > this.score) # Correct but trivial
+(return == false)  ==>  (this.winningValue >= 1) # Correct but trivial
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue) # Too strong / likely spurious
+(return == true)  ==>  (this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0) # Incorrect
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+this.winningValue >= this.size # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.hasEmptyCells():::EXIT;condition="return == true"
+return == true # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Too strong / likely spurious
+this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.hasEmptyCells():::EXIT;condition="not(return == true)"
+this.size one of { 1, 3, 4 } # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == false # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.score # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE % this.winningValue == 0 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Too strong / likely spurious
+this.winningValue > this.score # Incorrect
+this.size != this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.initializeEmpty():::ENTER
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.winningValue > this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.initializeEmpty():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+this.size >= 1 # Correct but trivial
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.winningValue > this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::ENTER
+this.winningValue one of { 1, 32, 2048 } # Too strong / likely spurious
+this.size one of { 1, 4, 32 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue % this.size == 0 # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue > this.score # Incorrect
+this.score % this.size == 0 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::EXIT663
+return == false
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::EXIT663;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::EXIT666
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(this.size) # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[]) # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(size(this.grid[])) # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == orig(this.winningValue) # Incorrect
+this.score one of { 0, 4 } # Too strong / likely spurious
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.score # Incorrect
+this.score != size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::EXIT666;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (this.score one of { 0, 4, 8 }) # Too strong / likely spurious
+(return == false)  ==>  (this.size one of { 1, 4, 32 }) # Too strong / likely spurious
+(return == false)  ==>  (this.winningValue one of { 1, 32, 2048 }) # Too strong / likely spurious
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue) # Incorrect
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size) # Incorrect
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.score) # Incorrect
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue) # Incorrect
+(return == true)  ==>  (this.score != size(this.grid[])-1) # Incorrect
+(return == true)  ==>  (this.score one of { 0, 4 }) # Too strong / likely spurious
+(return == true)  ==>  (this.size >= this.score) # Correct but trivial
+(return == true)  ==>  (this.winningValue > this.size) # Incorrect
+this.winningValue one of { 1, 32, 2048 } # Too strong / likely spurious
+this.size one of { 1, 4, 32 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue % this.size == 0 # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue > this.score # Incorrect
+this.score % this.size == 0 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::EXIT;condition="return == true"
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(this.size) # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == size(this.grid[]) # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE == orig(size(this.grid[])) # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == orig(this.winningValue) # Incorrect
+this.score one of { 0, 4 } # Too strong / likely spurious
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.score # Incorrect
+this.score != size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isEmpty():::EXIT;condition="not(return == true)"
+return == false
+===========================================================================
+ar.edu.unrc.game2048.Board.isFull():::ENTER
+this.winningValue one of { 1, 32, 2048 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue > this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isFull():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue) # Incorrect
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE <= this.size) # Incorrect
+(return == false)  ==>  (this.score != size(this.grid[])-1) # Incorrect
+(return == false)  ==>  (this.score one of { 0, 4, 8 }) # Too strong / likely spurious
+(return == false)  ==>  (this.size one of { 4, 28, 32 }) # Too strong / likely spurious
+(return == false)  ==>  (this.winningValue one of { 32, 2048 }) # Too strong / likely spurious
+(return == true)  ==>  (this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class) # Incorrect
+(return == true)  ==>  (this.score == 0) # Incorrect
+(return == true)  ==>  (this.size one of { 1, 4 }) # Too strong / likely spurious
+(return == true)  ==>  (this.winningValue one of { 1, 2048 }) # Too strong / likely spurious
+this.winningValue one of { 1, 32, 2048 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue > this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isFull():::EXIT;condition="return == true"
+this.winningValue one of { 1, 2048 } # Too strong / likely spurious
+this.size one of { 1, 4 } # Too strong / likely spurious
+this.score == 0 # Incorrect
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Incorrect
+return == true
+===========================================================================
+ar.edu.unrc.game2048.Board.isFull():::EXIT;condition="not(return == true)"
+this.winningValue one of { 32, 2048 } # Too strong / likely spurious
+this.size one of { 4, 28, 32 } # Too strong / likely spurious
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE <= this.size # Incorrect
+this.score != size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT280
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT280;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT289
+this.winningValue one of { 256, 512, 2048 } # Too strong / likely spurious
+this.size one of { 3, 4 } # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Incorrect
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.score # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+this.winningValue > this.size # Incorrect
+this.winningValue > this.score # Incorrect
+this.size != this.score # Incorrect
+this.score != size(this.grid[])-1 # Incorrect
+this.score % size(this.grid[])-1 == 0 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT289;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT293
+this.winningValue one of { 256, 512, 2048 } # Too strong / likely spurious
+this.size one of { 3, 4 } # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.score # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+this.winningValue > this.size # Incorrect
+this.winningValue > this.score # Incorrect
+this.size != this.score # Incorrect
+this.score != size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT293;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT297
+this.size one of { 1, 3, 4 } # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.score # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+this.winningValue > this.score # Incorrect
+this.size != this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT297;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue) # Incorrect
+(return == false)  ==>  (this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0) # Correct but trivial
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.score) # Incorrect
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.size) # Incorrect
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue) # Incorrect
+(return == true)  ==>  (this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class) # Correct but trivial
+(return == true)  ==>  (this.size != this.score) # Incorrect
+(return == true)  ==>  (this.size one of { 1, 3, 4 }) # Too strong / likely spurious
+(return == true)  ==>  (this.winningValue > this.score) # Incorrect
+(return == true)  ==>  (this.winningValue >= 1) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT;condition="return == true"
+this.size one of { 1, 3, 4 } # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != this.score # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+this.winningValue > this.score # Incorrect
+this.size != this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isLosingBoard():::EXIT;condition="not(return == true)"
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::EXIT264
+this.winningValue one of { 2, 2048 } # Too strong / likely spurious
+this.size one of { 2, 4 } # Too strong / likely spurious
+this.score one of { 0, 4 } # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == true
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::EXIT264;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::EXIT268
+return == false
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::EXIT268;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == true)  ==>  (this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class) # Correct but trivial
+(return == true)  ==>  (this.score one of { 0, 4 }) # Too strong / likely spurious
+(return == true)  ==>  (this.size one of { 2, 4 }) # Too strong / likely spurious
+(return == true)  ==>  (this.winningValue one of { 2, 2048 }) # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::EXIT;condition="return == true"
+this.winningValue one of { 2, 2048 } # Too strong / likely spurious
+this.size one of { 2, 4 } # Too strong / likely spurious
+this.score one of { 0, 4 } # Too strong / likely spurious
+this.rngStrategy.getClass().getName() == ar.edu.unrc.game2048.RNG.class # Correct but trivial
+return == true
+===========================================================================
+ar.edu.unrc.game2048.Board.isWinningBoard():::EXIT;condition="not(return == true)"
+return == false
+===========================================================================
+ar.edu.unrc.game2048.Board.mergeAdjacentEqualsCells(java.util.List):::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+nonEmpty != null # Correct but trivial
+nonEmpty[] elements != null # Correct but trivial
+nonEmpty[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+nonEmpty.getClass().getName() == java.util.ArrayList.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(nonEmpty[])-1 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > size(nonEmpty[]) # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue >= size(nonEmpty[]) # Incorrect
+this.size >= size(nonEmpty[]) # Correct but trivial
+this.grid.getClass().getName() != nonEmpty.getClass().getName() # Correct but trivial
+this.rngStrategy.getClass().getName() != nonEmpty.getClass().getName() # Correct but trivial
+size(this.grid[])-1 >= size(nonEmpty[])-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.mergeAdjacentEqualsCells(java.util.List):::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+nonEmpty[] == orig(nonEmpty[]) # Correct but trivial
+return.getClass().getName() == orig(nonEmpty.getClass().getName()) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+nonEmpty[] elements != null # Correct but trivial
+nonEmpty[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+return != null # Correct but trivial
+return[] elements != null # Correct but trivial
+return[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+return.getClass().getName() == java.util.ArrayList.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(nonEmpty[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(return[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > size(return[]) # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue >= size(return[]) # Incorrect
+this.winningValue >= orig(size(nonEmpty[])) # Incorrect
+this.size >= size(return[]) # Correct but trivial
+this.size >= orig(size(nonEmpty[])) # Correct but trivial
+this.grid.getClass().getName() != return.getClass().getName() # Correct but trivial
+this.score >= orig(this.score) # Correct and useful
+this.rngStrategy.getClass().getName() != return.getClass().getName() # Correct but trivial
+size(this.grid[])-1 >= size(nonEmpty[])-1 # Correct but trivial
+size(this.grid[])-1 >= size(return[])-1 # Correct but trivial
+size(nonEmpty[])-1 >= size(return[])-1 # Correct but trivial
+size(return[]) <= orig(size(nonEmpty[])) # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveDown():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue != this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveDown():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Incorrect
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1) # Correct but trivial
+(return == false)  ==>  (this.score == orig(this.score)) # Correct and useful
+(return == false)  ==>  (this.winningValue >= 1) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue != this.score # Incorrect
+this.winningValue != orig(this.score) # Incorrect
+this.score >= orig(this.score) # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Board.moveDown():::EXIT;condition="return == true"
+return == true
+===========================================================================
+ar.edu.unrc.game2048.Board.moveDown():::EXIT;condition="not(return == true)"
+this.score == orig(this.score) # Correct and useful
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveLeft():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveLeft():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Incorrect
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Incorrect
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1) # Incorrect
+(return == false)  ==>  (this.score == orig(this.score)) # Correct and useful
+(return == false)  ==>  (this.winningValue != orig(this.score)) # Incorrect
+(return == false)  ==>  (this.winningValue != this.score) # Incorrect
+(return == false)  ==>  (this.winningValue >= 1) # Correct but trivial
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue) # Incorrect
+(return == true)  ==>  (this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.score >= orig(this.score) # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveLeft():::EXIT;condition="return == true"
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveLeft():::EXIT;condition="not(return == true)"
+this.score == orig(this.score) # Correct and useful
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1 # Incorrect
+this.winningValue != this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveRight():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveRight():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Incorrect
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Incorrect
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1) # Incorrect
+(return == false)  ==>  (this.score == orig(this.score)) # Correct and useful
+(return == false)  ==>  (this.winningValue != orig(this.score)) # Incorrect
+(return == false)  ==>  (this.winningValue != this.score) # Incorrect
+(return == false)  ==>  (this.winningValue >= 1) # Correct but trivial
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue) # Incorrect
+(return == true)  ==>  (this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.score >= orig(this.score) # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Board.moveRight():::EXIT;condition="return == true"
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+this.winningValue % ar.edu.unrc.game2048.Board.DEFAULT_SIZE == 0 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.moveRight():::EXIT;condition="not(return == true)"
+this.score == orig(this.score) # Correct and useful
+return == false
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1 # Incorrect
+this.winningValue != this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveUp():::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveUp():::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Incorrect
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == false)  ==>  (this.score == orig(this.score)) # Correct and useful
+(return == false)  ==>  (this.winningValue != orig(this.score)) # Incorrect
+(return == false)  ==>  (this.winningValue != this.score) # Incorrect
+(return == false)  ==>  (this.winningValue >= 1) # Correct but trivial
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1) # Incorrect
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.score >= orig(this.score) # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Board.moveUp():::EXIT;condition="return == true"
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(this.grid[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.moveUp():::EXIT;condition="not(return == true)"
+this.score == orig(this.score) # Correct and useful
+return == false
+this.winningValue != this.score # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.padWithEmptyCells(java.util.List):::ENTER
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+merged != null # Correct and useful
+merged[] elements != null # Correct but trivial
+merged[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+merged.getClass().getName() == java.util.ArrayList.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(merged[])-1 # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > size(merged[]) # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue >= size(merged[]) # Correct but trivial
+this.size >= size(merged[]) # Correct and useful
+this.grid.getClass().getName() != merged.getClass().getName() # Correct but trivial
+this.rngStrategy.getClass().getName() != merged.getClass().getName() # Correct but trivial
+size(this.grid[])-1 >= size(merged[])-1 # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.padWithEmptyCells(java.util.List):::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+merged[] elements != null # Correct but trivial
+merged[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue >= orig(size(merged[])) # Incorrect
+this.size >= orig(size(merged[])) # Correct but trivial
+this.grid.getClass().getName() != orig(merged.getClass().getName()) # Correct but trivial
+this.rngStrategy.getClass().getName() != orig(merged.getClass().getName()) # Correct but trivial
+size(merged[])-1 >= orig(size(merged[]))-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.removeEmptyCells(java.util.List):::ENTER
+this.size == size(rowList[]) # Correct and useful
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+rowList != null # Correct and useful
+rowList[] elements != null # Correct but trivial
+rowList[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+rowList.getClass().getName() == java.util.ArrayList.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue >= this.size # Incorrect
+this.grid.getClass().getName() != rowList.getClass().getName() # Correct but trivial
+this.rngStrategy.getClass().getName() != rowList.getClass().getName() # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.removeEmptyCells(java.util.List):::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.size == orig(size(rowList[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+rowList[] == orig(rowList[]) # Correct but trivial
+return.getClass().getName() == orig(rowList.getClass().getName()) # Correct but trivial
+this.grid != null # Correct but trivial
+this.rngStrategy != null # Correct but trivial
+rowList[] elements != null # Correct but trivial
+rowList[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+return != null # Correct and useful
+return[] elements != null # Correct but trivial
+return[].getClass().getName() elements == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+return.getClass().getName() == java.util.ArrayList.class # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE >= size(return[])-1 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > size(return[]) # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue >= size(return[]) # Incorrect
+this.size >= size(return[]) # Correct and useful
+this.grid.getClass().getName() != return.getClass().getName() # Correct but trivial
+this.rngStrategy.getClass().getName() != return.getClass().getName() # Correct but trivial
+size(rowList[])-1 >= size(return[])-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.repOK():::ENTER
+this.grid != null
+this.rngStrategy != null
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size
+this.winningValue >= this.size
+===========================================================================
+ar.edu.unrc.game2048.Board.repOK():::EXIT619
+===========================================================================
+ar.edu.unrc.game2048.Board.repOK():::EXIT619;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.repOK():::EXIT
+this.winningValue == orig(this.winningValue)
+this.size == orig(this.size)
+this.size == orig(size(this.grid[]))
+this.grid == orig(this.grid)
+this.grid.getClass().getName() == orig(this.grid.getClass().getName())
+this.grid[] == orig(this.grid[])
+this.score == orig(this.score)
+this.rngStrategy == orig(this.rngStrategy)
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName())
+this.grid != null
+this.rngStrategy != null
+return == true
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size
+this.winningValue >= this.size
+===========================================================================
+ar.edu.unrc.game2048.Board.repOK():::EXIT;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Board.setCell(int, int, ar.edu.unrc.game2048.Cell):::ENTER
+this.winningValue one of { 1024, 2048 } # Too strong / likely spurious
+this.size one of { 4, 8 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+row >= 0 # Correct and useful
+col >= 0 # Correct and useful
+cell != null # Correct and useful
+cell.value >= 0 # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY != null # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == 0 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE <= this.size # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > row # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > col # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= cell.value # Incorrect
+this.winningValue > this.size # Incorrect
+this.winningValue > this.score # Incorrect
+this.winningValue > row # Incorrect
+this.winningValue > col # Incorrect
+this.winningValue >= cell.value # Incorrect
+this.winningValue > ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+this.score % this.size == 0 # Incorrect
+this.score >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+this.score != size(this.grid[])-1 # Incorrect
+row >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+row <= size(this.grid[])-1 # Correct but trivial
+col >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+col <= size(this.grid[])-1 # Correct but trivial
+cell.value >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+cell.value != size(this.grid[])-1 # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value < size(this.grid[])-1 # Too strong / likely spurious
+===========================================================================
+ar.edu.unrc.game2048.Board.setCell(int, int, ar.edu.unrc.game2048.Cell):::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+cell.value == orig(cell.value) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY == orig(ar.edu.unrc.game2048.Cell.EMPTY) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+this.winningValue one of { 1024, 2048 } # Too strong / likely spurious
+this.size one of { 4, 8 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+cell.value >= 0 # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY != null # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == 0 # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE <= this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= cell.value # Too strong / likely spurious
+this.winningValue > this.size # Too strong / likely spurious
+this.winningValue > this.score # Too strong / likely spurious
+this.winningValue >= cell.value # Too strong / likely spurious
+this.winningValue > ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+this.winningValue > orig(row) # Correct but trivial
+this.winningValue > orig(col) # Correct but trivial
+this.score % this.size == 0 # Too strong / likely spurious
+this.score >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+this.score != size(this.grid[])-1 # Too strong / likely spurious
+cell.value >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+cell.value != size(this.grid[])-1 # Incorrect
+ar.edu.unrc.game2048.Cell.EMPTY.value <= orig(row) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value <= orig(col) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value < size(this.grid[])-1 # Correct but trivial
+orig(row) <= size(this.grid[])-1 # Correct but trivial
+orig(col) <= size(this.grid[])-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.validSize(int):::ENTER
+size == size(this.grid[]) # Correct but trivial
+this.grid[this.size-1] == this.grid[size-1] # Correct but trivial
+size >= 1 # Correct and useful
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > size(this.grid[]) # Incorrect
+this.winningValue >= this.size # Correct but trivial
+this.winningValue >= size(this.grid[]) # Correct but trivial
+this.size % size == 0 # Correct but trivial
+this.size <= size # Incorrect
+===========================================================================
+ar.edu.unrc.game2048.Board.validSize(int):::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+orig(size) == size(this.grid[]) # Correct but trivial
+this.grid[this.size-1] == this.grid[orig(size)-1] # Correct but trivial
+this.grid[this.size-1] == orig(this.grid[post(size)-1]) # Correct but trivial
+this.grid[this.size-1] == orig(this.grid[size-1]) # Correct but trivial
+(return == false)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue) # Incorrect
+(return == false)  ==>  (orig(size) one of { 2, 3 }) # Too strong / likely spurious
+(return == false)  ==>  (this.grid == null) # Incorrect
+(return == false)  ==>  (this.rngStrategy == null) # Incorrect
+(return == false)  ==>  (this.score == 0) # Correct but trivial
+(return == false)  ==>  (this.size == 0) # Too strong / likely spurious
+(return == false)  ==>  (this.size == this.score) # Correct but trivial
+(return == true)  ==>  (ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > size(this.grid[])) # Too strong / likely spurious
+(return == true)  ==>  (orig(size) == size(this.grid[])) # Correct but trivial
+(return == true)  ==>  (orig(size) >= 1) # Correct but trivial
+(return == true)  ==>  (this.grid.getClass().getName() != this.rngStrategy.getClass().getName()) # Correct but trivial
+(return == true)  ==>  (this.grid.getClass().getName() == ar.edu.unrc.game2048.Cell[][].class) # Correct but trivial
+(return == true)  ==>  (this.grid[] elements != null) # Correct but trivial
+(return == true)  ==>  (this.size == size(this.grid[])) # Correct but trivial
+(return == true)  ==>  (this.winningValue >= 1) # Correct and useful
+(return == true)  ==>  (this.winningValue >= size(this.grid[])) # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > size(this.grid[]) # Incorrect
+this.winningValue >= this.size # Incorrect
+this.winningValue >= size(this.grid[]) # Incorrect
+this.size % orig(size) == 0 # Too strong / likely spurious
+this.size <= orig(size) # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.validSize(int):::EXIT;condition="return == true"
+return == true # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Board.validSize(int):::EXIT;condition="not(return == true)"
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == this.winningValue # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE == orig(this.winningValue) # Too strong / likely spurious
+this.size == this.score # Correct but trivial
+this.size == orig(this.score) # Correct but trivial
+this.size == 0 # Too strong / likely spurious
+this.grid == null # Correct but trivial
+this.rngStrategy == null # Correct but trivial
+return == false # Correct but trivial
+orig(size) one of { 2, 3 } # Too strong / likely spurious
+===========================================================================
+ar.edu.unrc.game2048.Board.validatePosition(int, int):::ENTER
+this.winningValue one of { 1024, 2048 } # Too strong / likely spurious
+this.size one of { 4, 8 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+row >= 0 # Correct and useful
+col >= 0 # Correct and useful
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE <= this.size # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > row # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > col # Too strong / likely spurious
+this.winningValue > this.size # Incorrect
+this.winningValue > this.score # Incorrect
+this.winningValue > row # Incorrect
+this.winningValue > col # Incorrect
+this.score % this.size == 0 # Too strong / likely spurious
+this.score != size(this.grid[])-1 # Too strong / likely spurious
+row <= size(this.grid[])-1 # Correct and useful
+col <= size(this.grid[])-1 # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Board.validatePosition(int, int):::EXIT
+this.winningValue == orig(this.winningValue) # Correct but trivial
+this.size == orig(this.size) # Correct but trivial
+this.size == orig(size(this.grid[])) # Correct but trivial
+this.grid == orig(this.grid) # Correct but trivial
+this.grid.getClass().getName() == orig(this.grid.getClass().getName()) # Correct but trivial
+this.grid[] == orig(this.grid[]) # Correct but trivial
+this.score == orig(this.score) # Correct but trivial
+this.rngStrategy == orig(this.rngStrategy) # Correct but trivial
+this.rngStrategy.getClass().getName() == orig(this.rngStrategy.getClass().getName()) # Correct but trivial
+this.winningValue one of { 1024, 2048 } # Too strong / likely spurious
+this.size one of { 4, 8 } # Too strong / likely spurious
+this.grid != null # Correct but trivial
+this.score one of { 0, 4, 8 } # Too strong / likely spurious
+this.rngStrategy != null # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE < this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE <= this.size # Correct but trivial
+ar.edu.unrc.game2048.Board.DEFAULT_SIZE != size(this.grid[])-1 # Too strong / likely spurious
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE >= this.winningValue # Incorrect
+ar.edu.unrc.game2048.Board.DEFAULT_WINNING_VALUE > this.size # Incorrect
+this.winningValue > this.size # Incorrect
+this.winningValue > this.score # Incorrect
+this.winningValue > orig(row) # Incorrect
+this.winningValue > orig(col) # Incorrect
+this.score % this.size == 0 # Too strong / likely spurious
+this.score != size(this.grid[])-1 # Too strong / likely spurious
+orig(row) <= size(this.grid[])-1 # Correct but trivial
+orig(col) <= size(this.grid[])-1 # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell:::CLASS
+ar.edu.unrc.game2048.Cell.EMPTY != null # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == 0 # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Cell:::OBJECT
+this.value >= 0 # Correct and useful
+this.value >= ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.Cell(int):::ENTER
+value >= 0 # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Cell.Cell(int):::EXIT
+this.value == orig(value) # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::ENTER
+other != null # Correct but trivial
+other.value >= 0 # Correct and useful
+ar.edu.unrc.game2048.Cell.EMPTY.value <= other.value # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT70
+this.value == ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+this.value == other.value # Correct and useful
+this.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+this.value == orig(other.value) # Correct but trivial
+this.value == 0 # Correct but trivial
+return == false # Too strong / likely spurious
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT70;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT72
+(return == false)  <==>  (this.value != other.value) # Correct and useful
+(return == true)  <==>  (this.value == other.value) # Correct and useful
+(return == true)  ==>  (ar.edu.unrc.game2048.Cell.EMPTY.value < other.value) # Correct and useful
+(return == true)  ==>  (other.value is a power of 2) # Correct but trivial
+(return == true)  ==>  (this.value > ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct and useful
+(return == true)  ==>  (this.value is a power of 2) # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT72;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT72;condition="not(return == true)"
+this.value != other.value # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT
+this.value == orig(this.value) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY == orig(ar.edu.unrc.game2048.Cell.EMPTY) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+other.value == orig(other.value) # Correct but trivial
+(return == true)  ==>  (ar.edu.unrc.game2048.Cell.EMPTY.value < other.value) # Correct and useful
+(return == true)  ==>  (other.value is a power of 2) # Correct but trivial
+(return == true)  ==>  (this.value == other.value) # Correct and useful
+(return == true)  ==>  (this.value > ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct and useful
+(return == true)  ==>  (this.value is a power of 2) # Correct but trivial
+other.value >= 0 # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value <= other.value # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT;condition="return == true"
+this.value == other.value # Correct and useful
+this.value == orig(other.value) # Correct but trivial
+this.value is a power of 2 # Correct but trivial
+return == true # Correct but trivial
+this.value > ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.canMergeWith(ar.edu.unrc.game2048.Cell):::EXIT;condition="not(return == true)"
+return == false # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::ENTER
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT114
+orig(this) == orig(o) # Correct and useful
+this.value one of { 0, 2, 4 } # Too strong / likely spurious
+return == true # Correct but trivial
+orig(o) != null # Correct and useful
+orig(o.getClass().getName()) == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT114;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT116
+this.value one of { 0, 1, 2 } # Too strong / likely spurious
+return == false # Too strong / likely spurious
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT116;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT118
+(return == true)  ==>  (this.value one of { 0, 2, 4 }) # Too strong / likely spurious
+orig(o) != null # Correct and useful
+orig(o.getClass().getName()) == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT118;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT118;condition="not(return == true)"
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT
+this.value == orig(this.value) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY == orig(ar.edu.unrc.game2048.Cell.EMPTY) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+(return == true)  ==>  (orig(o) != null) # Correct and useful
+(return == true)  ==>  (orig(o.getClass().getName()) == ar.edu.unrc.game2048.Cell.class) # Correct but trivial
+(return == true)  ==>  (this.value one of { 0, 2, 4 }) # Too strong / likely spurious
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT;condition="return == true"
+this.value one of { 0, 2, 4 } # Too strong / likely spurious
+return == true # Too strong / likely spurious
+orig(o) != null # Correct and useful
+orig(o.getClass().getName()) == ar.edu.unrc.game2048.Cell.class # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.equals(java.lang.Object):::EXIT;condition="not(return == true)"
+return == false # Too strong / likely spurious
+===========================================================================
+ar.edu.unrc.game2048.Cell.getValue():::ENTER
+===========================================================================
+ar.edu.unrc.game2048.Cell.getValue():::EXIT
+this.value == return # Correct and useful
+ar.edu.unrc.game2048.Cell.EMPTY == orig(ar.edu.unrc.game2048.Cell.EMPTY) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+return == orig(this.value) # Correct but trivial
+return >= 0 # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value <= return # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.isEmpty():::ENTER
+===========================================================================
+ar.edu.unrc.game2048.Cell.isEmpty():::EXIT
+this.value == orig(this.value) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY == orig(ar.edu.unrc.game2048.Cell.EMPTY) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+(this.value == 0)  <==>  (return == true) # Correct and useful
+(this.value == 0)  <==>  (this.value == ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.isEmpty():::EXIT;condition="return == true"
+this.value == ar.edu.unrc.game2048.Cell.EMPTY.value # Correct and useful
+this.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+this.value == 0 # Correct and useful
+return == true # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.isEmpty():::EXIT;condition="not(return == true)"
+this.value is a power of 2 # Correct and useful
+return == false # Correct but trivial
+this.value > ar.edu.unrc.game2048.Cell.EMPTY.value # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Cell.mergeWith(ar.edu.unrc.game2048.Cell):::ENTER
+this.value == other.value # Correct and useful
+this.value is a power of 2 # Correct but trivial
+other != null # Correct but trivial
+this.value > ar.edu.unrc.game2048.Cell.EMPTY.value # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.Cell.mergeWith(ar.edu.unrc.game2048.Cell):::EXIT
+this.value == other.value # Correct but trivial
+this.value == orig(this.value) # Correct but trivial
+this.value == orig(other.value) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY == orig(ar.edu.unrc.game2048.Cell.EMPTY) # Correct but trivial
+ar.edu.unrc.game2048.Cell.EMPTY.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value) # Correct but trivial
+this.value is a power of 2 # Correct but trivial
+return != null # Correct but trivial
+return.value is a power of 2 # Correct but trivial
+this.value > ar.edu.unrc.game2048.Cell.EMPTY.value # Correct but trivial
+2 * this.value - return.value == 0 # Correct and useful
+this.value < return.value # Correct and useful
+ar.edu.unrc.game2048.Cell.EMPTY.value < return.value # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.Cell.repOK():::ENTER
+===========================================================================
+ar.edu.unrc.game2048.Cell.repOK():::EXIT101
+===========================================================================
+ar.edu.unrc.game2048.Cell.repOK():::EXIT101;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.Cell.repOK():::EXIT
+this.value == orig(this.value)
+ar.edu.unrc.game2048.Cell.EMPTY == orig(ar.edu.unrc.game2048.Cell.EMPTY)
+ar.edu.unrc.game2048.Cell.EMPTY.value == orig(ar.edu.unrc.game2048.Cell.EMPTY.value)
+return == true
+===========================================================================
+ar.edu.unrc.game2048.Cell.repOK():::EXIT;condition="return == true"
+===========================================================================
+ar.edu.unrc.game2048.MathUtils.isPowerOfTwo(int):::ENTER
+value >= 2 # Correct and useful
+value is a power of 2 # Correct and useful
+===========================================================================
+ar.edu.unrc.game2048.MathUtils.isPowerOfTwo(int):::EXIT
+return == true # Correct but trivial
+===========================================================================
+ar.edu.unrc.game2048.MathUtils.isPowerOfTwo(int):::EXIT;condition="return == true"
