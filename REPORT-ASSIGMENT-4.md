@@ -152,3 +152,12 @@ El script `runDaikon.sh` unifica y automatiza el ciclo de vida completo de anál
 ```bash
 java -cp lib/daikon.jar daikon.PrintInvariants daikon-traces/output.inv.gz > daikon-output.txt
 ```
+
+## Discusion About Inferred Invariants
+
+
+
+## Daikon's vs `repOK()` Invariants
+
+
+##
