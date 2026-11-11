@@ -154,7 +154,27 @@ java -cp lib/daikon.jar daikon.PrintInvariants daikon-traces/output.inv.gz > dai
 ```
 
 ## Discusion About Inferred Invariants
+### Invariantes Inferidas: Clase Board
 
+1. **`this.score >= 0`** (Invariante de clase, Línea 11)
+   * **Clasificación:** Útil.
+   * **Razonamiento:** Asegura que el valor del puntaje (`score`) siempre sea un número positivo o cero. Resulta especialmente valiosa porque no se había considerado inicialmente como parte del método `repOk`, fortaleciendo así la especificación del estado válido del tablero.
+
+2. **`(return == false) ==> (this.score == orig(this.score))`** (Poscondición en `moveDown()`, Línea 819)
+   * **Clasificación:** Útil.
+   * **Razonamiento:** Esta poscondición aplica tanto a `moveDown()` como al resto de los métodos de movimiento (`move`). Define formalmente que, si la operación de movimiento retorna `false` (indicando que el tablero no sufrió cambios), el puntaje no debe modificarse y debe conservarse idéntico a su valor previo a la ejecución.
+
+3. **`this.score >= orig(this.score)`** (Poscondición en `mergeAdjacentEqualsCells`, Línea 795)
+   * **Clasificación:** Muy útil.
+   * **Razonamiento:** Al intentar fusionar celdas adyacentes, el puntaje aumentará si son compatibles, y se mantendrá igual si no lo son. Por lo tanto, el puntaje final siempre será mayor o igual al original. Es una poscondición fuerte que también se propaga a los métodos de movimiento general, ya que estos hacen uso interno de esta función de mezcla.
+
+4. **`this.size >= size(merged[])`** (Invariante en `padWithEmptyCells`, Línea 962)
+   * **Clasificación:** Útil.
+   * **Razonamiento:** Establece que la longitud del arreglo de celdas fusionadas (`merged[]`) será siempre menor o igual al tamaño del lado del tablero. Esto es lógicamente correcto: al partir de una colección del tamaño máximo (`this.size`), la acción de fusionar elementos reduce la cantidad resultante y, en el peor de los casos (sin fusiones), el tamaño se mantiene igual.
+
+5. **`this.size == size(rowList[])`** (Precondición en `removeEmptyCells`, Línea 990)
+   * **Clasificación:** Útil.
+   * **Razonamiento:** Exige que la lista pasada como parámetro (`rowList[]`) tenga una longitud exactamente igual a la dimensión del tablero. Esto es fundamental para garantizar que el algoritmo esté contemplando la fila o columna en su totalidad, evitando procesamientos incompletos o estados inconsistentes.
 
 
 ## Daikon's vs `repOK()` Invariants
