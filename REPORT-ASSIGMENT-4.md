@@ -153,8 +153,8 @@ El script `runDaikon.sh` unifica y automatiza el ciclo de vida completo de anál
 java -cp lib/daikon.jar daikon.PrintInvariants daikon-traces/output.inv.gz > daikon-output.txt
 ```
 
-## Discusion About Inferred Invariants
-### Invariantes Inferidas: Clase Board
+## Discusión sobre los Invariantes Inferidos
+### Invariantes Inferidos: Clase `Board`
 
 1. **`this.score >= 0`** (Invariante de clase, Línea 11)
    * **Clasificación:** Útil.
@@ -176,8 +176,38 @@ java -cp lib/daikon.jar daikon.PrintInvariants daikon-traces/output.inv.gz > dai
    * **Clasificación:** Útil.
    * **Razonamiento:** Exige que la lista pasada como parámetro (`rowList[]`) tenga una longitud exactamente igual a la dimensión del tablero. Esto es fundamental para garantizar que el algoritmo esté contemplando la fila o columna en su totalidad, evitando procesamientos incompletos o estados inconsistentes.
 
+## Invariantes de Inferidos: Clase `Cell`
 
-## Daikon's vs `repOK()` Invariants
+
+## Daikon vs `repOK()`
+
+En la mayoría de los casos daikon no pudo generar buenos invariantes, o descubir invariantes significativos que no hayamos contemplado antes en el `repOK()`. En ocaciones se ve sesgado por falta de trazas que exploren situaciones limites o interazantes de la partida ya que no contamos con métodos sofisticados para conseguirlas como métodos de busqueda por adversario y otros métodos por el estilo, por ejemplo, es muy dificil (imposible) encontrar una traza ganadora a partir de una heuristica random como la que provee el fuzzer.
+
+## Daikon vs. Manual and Automated Test Oracles
+
+Randoop y EvoSuite fueron los métodos que más destacaron para la generación de oráculos en este proyecto.
+
+Randoop nos permitío encontrar la mayor cantidad de bugs en el código, pero generó muchos tests dificiles de entender y a veces carentes de sentido.
+
+EvoSuite nos permitió mejorar las métricas de nuestros tests como la cobertura de lineas o la de mutantes. Si bien no expuso bugs significativos, debido a que previamente usamos Randoop, los tests que generó fueron más finos y entendibles.
 
 
-##
+## Actualizaciones en el `repOK()` basadas en la salida de Daikon
+
+Solo actualizamos el `repOK()` de la calse `Board` con un invariante de clase:
+
+[`this.score >= 0`](daikon-output.txt#L11)
+
+Agregado al repOK() como:
+
+```java
+    public boolean repOK() {
+        //...
+        if (score < 0) {
+            return false;
+        }
+        //...
+        return true;
+    }
+
+```
