@@ -19,7 +19,12 @@ public class MainCLI {
         String sizeInput = this.scanner.nextLine().trim();
 
         if (sizeInput.startsWith("[")) {
-            this.board = new Board(sizeInput);
+            System.out.print("Enter a winning value: ");
+            String winningValueInput = this.scanner.nextLine().trim();
+            int winningValue = winningValueInput.isEmpty()
+                    ? Board.DEFAULT_WINNING_VALUE
+                    : Integer.parseInt(winningValueInput);
+            this.board = new Board(sizeInput, winningValue);
         } else {
             System.out.print("Enter a winning value: ");
             String winningValueInput = this.scanner.nextLine().trim();
@@ -59,7 +64,7 @@ public class MainCLI {
             displayBoard();
 
             if (board.isWinningBoard()) {
-                System.out.println("🎉 Congratulations! You reached 2048! 🎉");
+                System.out.println("🎉 Congratulations! You reached " + board.winningValue + "! 🎉");
                 System.out.println("You can continue playing or quit.");
             }
 
