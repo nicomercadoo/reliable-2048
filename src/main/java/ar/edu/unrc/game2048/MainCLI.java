@@ -18,18 +18,31 @@ public class MainCLI {
         System.out.print("Enter a board size: ");
         String sizeInput = this.scanner.nextLine().trim();
 
-        System.out.print("Enter a winning value: ");
-        String winningValueInput = this.scanner.nextLine().trim();
+        if (sizeInput.startsWith("[")) {
+            this.board = new Board(sizeInput);
+        } else {
+            System.out.print("Enter a winning value: ");
+            String winningValueInput = this.scanner.nextLine().trim();
 
-        int size = sizeInput.isEmpty()
-                ? Board.DEFAULT_SIZE
-                : Integer.parseInt(sizeInput);
+            int size = sizeInput.isEmpty()
+                    ? Board.DEFAULT_SIZE
+                    : Integer.parseInt(sizeInput);
 
-        int winningValue = winningValueInput.isEmpty()
-                ? Board.DEFAULT_WINNING_VALUE
-                : Integer.parseInt(winningValueInput);
+            int winningValue = winningValueInput.isEmpty()
+                    ? Board.DEFAULT_WINNING_VALUE
+                    : Integer.parseInt(winningValueInput);
 
-        this.board = new Board(size, winningValue);
+            this.board = new Board(size, winningValue);
+        }
+    }
+
+    public MainCLI(String initialBoardStr) {
+        this(initialBoardStr, Board.DEFAULT_WINNING_VALUE);
+    }
+
+    public MainCLI(String initialBoardStr, int winningValue) {
+        this.scanner = new Scanner(System.in);
+        this.board = new Board(initialBoardStr, winningValue);
     }
 
     /**
@@ -105,7 +118,15 @@ public class MainCLI {
     }
 
     public static void main(String[] args) {
-        MainCLI game = new MainCLI();
+        MainCLI game;
+        if (args.length == 0) {
+            game = new MainCLI();
+        } else if (args.length == 1) {
+            game = new MainCLI(args[0].trim());
+        } else {
+            int winningValue = Integer.parseInt(args[1].trim());
+            game = new MainCLI(args[0].trim(), winningValue);
+        }
         game.play();
     }
 }
