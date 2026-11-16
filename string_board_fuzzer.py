@@ -133,6 +133,33 @@ class GrammarFuzzer:
                 term = term.replace(nt, replacement, 1)
         return term
 
+#---------------------------------------------------------------------------
+# Fucion de mutacion de Strings
+# --------------------------------------------------------------------------
+def mutate_string(s, max_mutations=1):
+    if not s: return s
+
+    # Convertimos a lista para facilitar la manipulacion por indices
+    s_list = list(s)
+    num_mutations = random.randint(1, max_mutations)
+
+    for _ in range(num_mutations):
+        if not s_list: break # Por si las mutaciones eliminan la lista entera
+
+        operacion = random.choice(['insert', 'delete', 'substitute'])
+        pos = random.randint(0, len(s_list) - 1)
+
+        # Usamos caracteres imprimibles (letras, numeros, simbolos de puntuacion)
+        random_char = random.choice(string.printable)
+
+        if operacion == 'insert':
+            s_list.insert(pos, random_char)
+        elif operacion == 'delete':
+            s_list.pop(pos)
+        elif operacion == 'substitute':
+            s_list[pos] = random_char
+
+    return "".join(s_list)
 
 # ---------------------------------------------------------------------------
 # Generator of Board Configurations & Move Sequences
