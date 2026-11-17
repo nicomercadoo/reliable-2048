@@ -9,6 +9,7 @@ import java.util.Scanner;
  * It demonstrates how to use the Board class and its methods.
  */
 public class MainCLI {
+
     private final Board board;
     private final Scanner scanner;
 
@@ -22,20 +23,20 @@ public class MainCLI {
             System.out.print("Enter a winning value: ");
             String winningValueInput = this.scanner.nextLine().trim();
             int winningValue = winningValueInput.isEmpty()
-                    ? Board.DEFAULT_WINNING_VALUE
-                    : Integer.parseInt(winningValueInput);
+                ? Board.DEFAULT_WINNING_VALUE
+                : Integer.parseInt(winningValueInput);
             this.board = new Board(sizeInput, winningValue);
         } else {
             System.out.print("Enter a winning value: ");
             String winningValueInput = this.scanner.nextLine().trim();
 
             int size = sizeInput.isEmpty()
-                    ? Board.DEFAULT_SIZE
-                    : Integer.parseInt(sizeInput);
+                ? Board.DEFAULT_SIZE
+                : Integer.parseInt(sizeInput);
 
             int winningValue = winningValueInput.isEmpty()
-                    ? Board.DEFAULT_WINNING_VALUE
-                    : Integer.parseInt(winningValueInput);
+                ? Board.DEFAULT_WINNING_VALUE
+                : Integer.parseInt(winningValueInput);
 
             this.board = new Board(size, winningValue);
         }
@@ -55,7 +56,9 @@ public class MainCLI {
      */
     public void play() {
         System.out.println("=== 2048 Game ===");
-        System.out.println("Controls: W(up), S(down), A(left), D(right), Q(quit)");
+        System.out.println(
+            "Controls: W(up), S(down), A(left), D(right), Q(quit)"
+        );
         System.out.println();
 
         assert board.repOK() : "Invariante violado al inicializar el tablero";
@@ -64,7 +67,11 @@ public class MainCLI {
             displayBoard();
 
             if (board.isWinningBoard()) {
-                System.out.println("🎉 Congratulations! You reached " + board.winningValue + "! 🎉");
+                System.out.println(
+                    "🎉 Congratulations! You reached " +
+                        board.winningValue +
+                        "! 🎉"
+                );
                 System.out.println("You can continue playing or quit.");
             }
 
@@ -78,7 +85,9 @@ public class MainCLI {
             String input = scanner.nextLine().trim().toUpperCase();
 
             if (input.equals("Q")) {
-                System.out.println("Thanks for playing! Final score: " + board.getScore());
+                System.out.println(
+                    "Thanks for playing! Final score: " + board.getScore()
+                );
                 break;
             }
 
@@ -101,12 +110,15 @@ public class MainCLI {
                     continue;
             }
 
-            assert board.repOK() : "Invariante violado tras intentar mover: " + input;
+            assert board.repOK() : "Invariante violado tras intentar mover: " +
+                input;
 
             if (moved) {
                 System.out.println("Tile moved!");
             } else {
-                System.out.println("No tiles moved. Try a different direction.");
+                System.out.println(
+                    "No tiles moved. Try a different direction."
+                );
             }
 
             System.out.println();
@@ -123,15 +135,19 @@ public class MainCLI {
     }
 
     public static void main(String[] args) {
-        MainCLI game;
-        if (args.length == 0) {
-            game = new MainCLI();
-        } else if (args.length == 1) {
-            game = new MainCLI(args[0].trim());
-        } else {
-            int winningValue = Integer.parseInt(args[1].trim());
-            game = new MainCLI(args[0].trim(), winningValue);
+        try {
+            MainCLI game;
+            if (args.length == 0) {
+                game = new MainCLI();
+            } else if (args.length == 1) {
+                game = new MainCLI(args[0].trim());
+            } else {
+                int winningValue = Integer.parseInt(args[1].trim());
+                game = new MainCLI(args[0].trim(), winningValue);
+            }
+            game.play();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid board rejected: " + e.getMessage());
         }
-        game.play();
     }
 }
