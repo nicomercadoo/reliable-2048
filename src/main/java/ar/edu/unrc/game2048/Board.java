@@ -78,6 +78,151 @@ public class Board {
         this(mock, DEFAULT_SIZE, DEFAULT_WINNING_VALUE);
     }
 
+    public Board(MockRNG mock, String boardStr) {
+        this(mock, boardStr, DEFAULT_WINNING_VALUE);
+    }
+
+    /**
+     * Creates a new board initialized with the state specified by a board string
+     * with default winning value.
+     *
+     * @param boardStr string representation of the board, e.g. "[0,0,0,0,4,2,0,0,0,0,0,0,2,2,2,2]"
+     * @throws IllegalArgumentException if boardStr is invalid, malformed, or violates invariants
+     */
+    public Board(String boardStr) {
+        this(new RNG(), boardStr, DEFAULT_WINNING_VALUE);
+    }
+
+    /**
+     * Creates a new board initialized with the state specified by a board string
+     * and a specified winning value.
+     *
+     * @param boardStr     string representation of the board
+     * @param winningValue winning value of the game
+     * @throws IllegalArgumentException if boardStr or winningValue is invalid
+     */
+    public Board(String boardStr, int winningValue) {
+        this(new RNG(), boardStr, winningValue);
+    }
+
+    /**
+     * Creates a new board initialized with the state specified by a board string,
+     * a specified winning value and an RNG strategy.
+     *
+     * @param rng          RNGStrategy to use for future random tiles
+     * @param boardStr     string representation of the board
+     * @param winningValue winning value of the game
+     * @throws IllegalArgumentException if rng, boardStr or winningValue is invalid
+     */
+    public Board(RNGStrategy rng, String boardStr, int winningValue) {
+        if (rng == null) {
+            throw new IllegalArgumentException("RNGStrategy cannot be null");
+        }
+        if (winningValue <= 0) {
+            throw new IllegalArgumentException("Winning value must be positive and not 0: " + winningValue);
+        }
+        if (!MathUtils.isPowerOfTwo(winningValue)) {
+            throw new IllegalArgumentException("Winning value must be a power of two: " + winningValue);
+        }
+
+        int[] cellValues = parseBoardString(boardStr);
+        int parsedSize = (int) Math.round(Math.sqrt(cellValues.length));
+
+        this.winningValue = winningValue;
+
+        if (!validSize(parsedSize)) {
+            throw new IllegalArgumentException("Board size must be greater or equals than "
+                    + Math.ceil(Math.sqrt(Math.log(winningValue) / Math.log(2))));
+        }
+
+        this.rngStrategy = rng;
+        this.size = parsedSize;
+        this.grid = new Cell[size][size];
+        this.score = 0;
+
+        int index = 0;
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                int val = cellValues[index++];
+                this.grid[r][c] = (val == 0) ? Cell.EMPTY : new Cell(val);
+            }
+        }
+    }
+
+    /**
+     * Static factory method to create a Board from a board string.
+     *
+     * @param boardStr string representation of the board
+     * @return a new Board instance
+     */
+    public static Board fromString(String boardStr) {
+        return new Board(boardStr);
+    }
+
+    /**
+     * Static factory method to create a Board from a board string with custom winning value.
+     *
+     * @param boardStr     string representation of the board
+     * @param winningValue winning value of the game
+     * @return a new Board instance
+     */
+    public static Board fromString(String boardStr, int winningValue) {
+        return new Board(boardStr, winningValue);
+    }
+
+    /**
+     * Parses a board string into an array of cell values.
+     * Format: "[v1,v2,...,vn]"
+     *
+     * @param boardStr string representation of the board
+     * @return array of cell integer values
+     * @throws IllegalArgumentException if the format or cell values are invalid
+     */
+    private static int[] parseBoardString(String boardStr) {
+        if (boardStr == null) {
+            throw new IllegalArgumentException("Board string cannot be null");
+        }
+        String trimmed = boardStr.trim();
+        if (!trimmed.startsWith("[") || !trimmed.endsWith("]")) {
+            throw new IllegalArgumentException("Board string must start with '[' and end with ']': " + boardStr);
+        }
+        String inner = trimmed.substring(1, trimmed.length() - 1).trim();
+        if (inner.isEmpty()) {
+            throw new IllegalArgumentException("Board string cannot be empty: " + boardStr);
+        }
+
+        String[] tokens = inner.split(",", -1);
+        int totalCells = tokens.length;
+        int s = (int) Math.round(Math.sqrt(totalCells));
+        if (s * s != totalCells || s <= 0) {
+            throw new IllegalArgumentException(
+                    "Board string must represent a square grid (length " + totalCells + " is not a perfect square): " + boardStr);
+        }
+
+        int[] values = new int[totalCells];
+        for (int i = 0; i < totalCells; i++) {
+            String token = tokens[i].trim();
+            if (token.isEmpty()) {
+                throw new IllegalArgumentException("Empty cell value found at index " + i + " in board string: " + boardStr);
+            }
+            int val;
+            try {
+                val = Integer.parseInt(token);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid cell value '" + token + "' at index " + i + " in board string: " + boardStr, e);
+            }
+            if (val < 0) {
+                throw new IllegalArgumentException("Cell value cannot be negative: " + val + " at index " + i);
+            }
+            if (val > 0 && !MathUtils.isPowerOfTwo(val)) {
+                throw new IllegalArgumentException("Cell value must be 0 or a power of two: " + val + " at index " + i);
+            }
+            values[i] = val;
+        }
+
+        return values;
+    }
+
     /**
      * Creates a new board of the specified size and specified winning value with
      * two random tiles.
@@ -570,6 +715,27 @@ public class Board {
             sb.append("-----+");
         }
         sb.append("\n");
+        return sb.toString();
+    }
+
+    /**
+     * Returns a string representation of the board in list format,
+     * e.g., "[0,0,0,0,4,2,0,0,0,0,0,0,2,2,2,2]".
+     *
+     * @return the string representation of the board cells
+     */
+    public String toBoardString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                if (r > 0 || c > 0) {
+                    sb.append(",");
+                }
+                sb.append(grid[r][c].getValue());
+            }
+        }
+        sb.append("]");
         return sb.toString();
     }
 
