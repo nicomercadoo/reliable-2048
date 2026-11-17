@@ -1,0 +1,237 @@
+## Comandos
+
+### Automatización Integral con `runDaikon.sh`
+
+El script `runDaikon.sh` unifica y automatiza el ciclo de vida completo de análisis dinámico con Daikon:
+
+1. **Generación de trazas (`--gen`)**: Ejecuta suites de pruebas bajo Chicory para generar archivos `.dtrace.gz`.
+2. **Inferencia de invariantes (`--infer`)**: Ejecuta Daikon sobre las trazas generadas para obtener modelos `.inv.gz`.
+3. **Volcado a texto legible (`--dump [<archivo>]`)**: Extrae los invariantes con `daikon.PrintInvariants` hacia un archivo de texto.
+
+```bash
+./runDaikon.sh [ACCIONES] [SUITES]
+```
+
+#### Opciones de Acción (Obligatorio: especificar al menos una)
+
+- `--gen`: Genera trazas de ejecución (`.dtrace.gz`).
+- `--infer`: Infiere invariantes a partir de las trazas (`.inv.gz`).
+- `--dump [<archivo>]`: Vuelca invariantes legibles a un archivo de texto (por defecto `daikon-output.txt` o `daikon-output-<suite>.txt`).
+
+#### Opciones de Suite / Objetivo
+
+- `--manual`: Aplica sobre tests manuales (`CellTest`, `BoardTest`).
+- `--randoop`: Aplica sobre tests de Randoop (`RegressionTest`).
+- `--evosuite`: Aplica sobre tests de EvoSuite (`Cell_ESTest`, `Board_ESTest`).
+- `--combined`: Aplica sobre la traza combinada (`daikon-traces/output.inv.gz`).
+- `--all`: Aplica sobre todas las suites disponibles (por defecto en `--gen`).
+
+---
+
+### Ejemplos de Uso
+
+#### 1. Generación de Trazas (`--gen`)
+
+```bash
+# Generar todas las trazas por separado de forma secuencial
+./runDaikon.sh --gen --all
+
+# Generar traza únicamente para tests manuales (daikon-traces/manual.dtrace.gz)
+./runDaikon.sh --gen --manual
+
+# Generar traza únicamente para Randoop (daikon-traces/randoop.dtrace.gz)
+./runDaikon.sh --gen --randoop
+
+# Generar traza únicamente para EvoSuite (daikon-traces/evosuite.dtrace.gz)
+./runDaikon.sh --gen --evosuite
+```
+
+#### 2. Inferencia de Invariantes (`--infer`)
+
+```bash
+# Inferir combinando todas las trazas existentes (daikon-traces/output.inv.gz)
+./runDaikon.sh --infer
+
+# Inferir invariantes para una suite específica
+./runDaikon.sh --infer --manual      # Salida: daikon-traces/manual.inv.gz
+./runDaikon.sh --infer --randoop     # Salida: daikon-traces/randoop.inv.gz
+./runDaikon.sh --infer --evosuite    # Salida: daikon-traces/evosuite.inv.gz
+
+# Inferir individualmente para cada suite y además la combinada
+./runDaikon.sh --infer --all
+```
+
+#### 3. Volcado de Invariantes a Texto (`--dump`)
+
+```bash
+# Volcar invariantes combinados a daikon-output.txt por defecto
+./runDaikon.sh --dump
+
+# Volcar invariantes combinados a un archivo específico
+./runDaikon.sh --dump mis-invariantes.txt
+
+# Volcar invariantes de una suite particular
+./runDaikon.sh --dump --manual               # Salida: daikon-output-manual.txt
+./runDaikon.sh --dump salida.txt --manual    # Salida: salida.txt
+```
+
+#### 4. Ejecución en Cadena (Pipeline)
+
+```bash
+# Generar trazas, inferir y volcar invariantes en un solo paso para tests manuales
+./runDaikon.sh --gen --infer --dump --manual
+
+# Pipeline completo para todas las trazas combinadas
+./runDaikon.sh --gen --infer --dump
+```
+
+---
+
+### Comandos Individuales Subyacentes
+
+#### 1. Generación con Chicory
+
+- **Tests Manuales**:
+  ```bash
+  java -cp "lib/daikon.jar:lib/randoop-all-4.3.4.jar:evosuite-1.0.6.jar:target/classes:target/test-classes:$(mvn dependency:build-classpath -q -DforceStdout)" \
+    daikon.Chicory \
+    --ppt-select-pattern="ar\.edu\.unrc\.game2048\.(Board|Cell|MockRNG|MathUtils)(\.|\:\:)" \
+    --ppt-omit-pattern=".*Test.*" \
+    --output-dir=daikon-traces \
+    --dtrace-file=manual.dtrace.gz \
+    org.junit.runner.JUnitCore \
+    ar.edu.unrc.game2048.CellTest ar.edu.unrc.game2048.BoardTest
+  ```
+- **Tests de Randoop**:
+  ```bash
+  java -cp "lib/daikon.jar:lib/randoop-all-4.3.4.jar:evosuite-1.0.6.jar:target/classes:target/test-classes:$(mvn dependency:build-classpath -q -DforceStdout)" \
+    daikon.Chicory \
+    --ppt-select-pattern="ar\.edu\.unrc\.game2048\.(Board|Cell|MockRNG|MathUtils)(\.|\:\:)" \
+    --ppt-omit-pattern=".*Test.*" \
+    --output-dir=daikon-traces \
+    --dtrace-file=randoop.dtrace.gz \
+    org.junit.runner.JUnitCore \
+    randoopTests.RegressionTest
+  ```
+- **Tests de EvoSuite**:
+
+  ```bash
+  JDK_JAVA_OPTIONS="-Djava.security.manager=allow --add-opens java.desktop/java.awt=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-exports java.base/sun.net.util=ALL-UNNAMED" \
+  java -cp "lib/daikon.jar:lib/randoop-all-4.3.4.jar:evosuite-1.0.6.jar:target/classes:target/test-classes:$(mvn dependency:build-classpath -q -DforceStdout)" \
+    daikon.Chicory \
+    --ppt-select-pattern="ar\.edu\.unrc\.game2048\.(Board|Cell|MockRNG|MathUtils)(\.|\:\:)" \
+    --ppt-omit-pattern=".*Test.*" \
+    --output-dir=daikon-traces \
+    --dtrace-file=evosuite.dtrace.gz \
+    ar.edu.unrc.game2048.EvoSuiteTestRunner
+  ```
+
+- **Tests de Fuzzer**
+  ```bash
+  python daikon_fuzzer.py
+  ```
+
+#### 2. Inferencia con Daikon
+
+- **Combinada**:
+  ```bash
+  java -Xmx4g -cp lib/daikon.jar daikon.Daikon \
+       -o daikon-traces/output.inv.gz \
+       daikon-traces/*.dtrace.gz \
+       daikon-traces/fuzzer_runs/*.dtrace.gz
+  ```
+- **Específica (ej. manual)**:
+  ```bash
+  java -Xmx4g -cp lib/daikon.jar daikon.Daikon \
+       -o daikon-traces/manual.inv.gz \
+       daikon-traces/manual.dtrace.gz
+  ```
+
+#### 3. Volcado con PrintInvariants
+
+```bash
+java -cp lib/daikon.jar daikon.PrintInvariants daikon-traces/output.inv.gz > daikon-output.txt
+```
+
+## Discusión sobre los Invariantes Inferidos
+
+### Invariantes Inferidos: Clase `Board`
+
+1. **`this.score >= 0`** (Invariante de clase, Línea 11)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Asegura que el valor del puntaje (`score`) siempre sea un número positivo o cero. Resulta especialmente valiosa porque no se había considerado inicialmente como parte del método `repOk`, fortaleciendo así la especificación del estado válido del tablero.
+
+2. **`(return == false) ==> (this.score == orig(this.score))`** (Poscondición en `moveDown()`, Línea 819)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Esta poscondición aplica tanto a `moveDown()` como al resto de los métodos de movimiento (`move`). Define formalmente que, si la operación de movimiento retorna `false` (indicando que el tablero no sufrió cambios), el puntaje no debe modificarse y debe conservarse idéntico a su valor previo a la ejecución.
+
+3. **`this.score >= orig(this.score)`** (Poscondición en `mergeAdjacentEqualsCells`, Línea 795)
+   - **Clasificación:** Muy útil.
+   - **Razonamiento:** Al intentar fusionar celdas adyacentes, el puntaje aumentará si son compatibles, y se mantendrá igual si no lo son. Por lo tanto, el puntaje final siempre será mayor o igual al original. Es una poscondición fuerte que también se propaga a los métodos de movimiento general, ya que estos hacen uso interno de esta función de mezcla.
+
+4. **`this.size >= size(merged[])`** (Invariante en `padWithEmptyCells`, Línea 962)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Establece que la longitud del arreglo de celdas fusionadas (`merged[]`) será siempre menor o igual al tamaño del lado del tablero. Esto es lógicamente correcto: al partir de una colección del tamaño máximo (`this.size`), la acción de fusionar elementos reduce la cantidad resultante y, en el peor de los casos (sin fusiones), el tamaño se mantiene igual.
+
+5. **`this.size == size(rowList[])`** (Precondición en `removeEmptyCells`, Línea 990)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Exige que la lista pasada como parámetro (`rowList[]`) tenga una longitud exactamente igual a la dimensión del tablero. Esto es fundamental para garantizar que el algoritmo esté contemplando la fila o columna en su totalidad, evitando procesamientos incompletos o estados inconsistentes.
+
+## Invariantes de Inferidos: Clase `Cell`
+
+1. **`this.value >= 0`** (Invariante de objeto en `Cell`, Línea 1262)
+
+- **Clasificación:** Útil.
+- **Razonamiento:** Asegura que el valor numérico almacenado en cualquier instancia de celda nunca sea negativo, acotando el dominio válido a `0` (celda vacía) o valores positivos. Resulta fundamental para sostener el invariante de representación (`repOk`) de `Cell`
+
+2. **`(return == true) <==> (this.value == other.value)`** (Poscondición en `canMergeWith(Cell)`, Línea 1288)
+
+- **Clasificación:** Muy útil.
+- **Razonamiento:** Formaliza mediante una doble implicación el contrato central de compatibilidad entre dos celdas: pueden fusionarse si y solo si poseen exactamente el mismo valor. Esto evita fusiones inválidas entre fichas distintas o con celdas vacías.
+
+3. **`this.value == other.value`** (Precondición en `mergeWith(Cell)`, Línea 1396)
+
+- **Clasificación:** Útil.
+- **Razonamiento:** Exige como requisito previo a la ejecución de `mergeWith` que ambas celdas tengan el mismo valor. Establece el contrato defensivo del método, asegurando que nunca se intente combinar dos fichas incompatibles o vacías.
+
+4. **`2 * this.value - return.value == 0`** (Poscondición en `mergeWith(Cell)`, Línea 1411)
+
+- **Clasificación:** Muy útil.
+- **Razonamiento:** Especifica algebraicamente el comportamiento aritmético exacto de la fusión: el valor de la nueva celda retornada (`return.value`) debe ser estrictamente el doble del valor de las celdas originales (`2 * this.value`).
+
+5. **`(this.value == 0) <==> (return == true)`** (Poscondición en `isEmpty()`, Línea 1381)
+
+- **Clasificación:** Útil.
+- **Razonamiento:** Define de forma bicondicional el criterio de vacuidad de una celda, estableciendo una equivalencia exacta entre el estado interno (`this.value == 0`) y el resultado booleano del método observador (`isEmpty()`). Asimismo, en el caso negado (`not(return == true)`, línea 1391) garantiza que toda celda no vacía contiene un valor que es potencia de 2 (`this.value is a power of 2`).
+
+## Daikon vs `repOK()`
+
+En la mayoría de los casos daikon no pudo generar buenos invariantes, o descubir invariantes significativos que no hayamos contemplado antes en el `repOK()`. En ocaciones se ve sesgado por falta de trazas que exploren situaciones limites o interazantes de la partida ya que no contamos con métodos sofisticados para conseguirlas como métodos de busqueda por adversario y otros métodos por el estilo, por ejemplo, es muy dificil (imposible) encontrar una traza ganadora a partir de una heuristica random como la que provee el fuzzer.
+
+## Daikon vs. Manual and Automated Test Oracles
+
+Randoop y EvoSuite fueron los métodos que más destacaron para la generación de oráculos en este proyecto.
+
+Randoop nos permitío encontrar la mayor cantidad de bugs en el código, pero generó muchos tests dificiles de entender y a veces carentes de sentido.
+
+EvoSuite nos permitió mejorar las métricas de nuestros tests como la cobertura de lineas o la de mutantes. Si bien no expuso bugs significativos, debido a que previamente usamos Randoop, los tests que generó fueron más finos y entendibles.
+
+## Actualizaciones en el `repOK()` basadas en la salida de Daikon
+
+Solo actualizamos el `repOK()` de la calse `Board` con un invariante de clase:
+
+[`this.score >= 0`](daikon-output.txt#L11)
+
+Agregado al repOK() como:
+
+```java
+    public boolean repOK() {
+        //...
+        if (score < 0) {
+            return false;
+        }
+        //...
+        return true;
+    }
+
+```
