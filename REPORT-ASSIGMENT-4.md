@@ -153,11 +153,85 @@ El script `runDaikon.sh` unifica y automatiza el ciclo de vida completo de anál
 java -cp lib/daikon.jar daikon.PrintInvariants daikon-traces/output.inv.gz > daikon-output.txt
 ```
 
-## Discusion About Inferred Invariants
+## Discusión sobre los Invariantes Inferidos
 
+### Invariantes Inferidos: Clase `Board`
 
+1. **`this.score >= 0`** (Invariante de clase, Línea 11)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Asegura que el valor del puntaje (`score`) siempre sea un número positivo o cero. Resulta especialmente valiosa porque no se había considerado inicialmente como parte del método `repOk`, fortaleciendo así la especificación del estado válido del tablero.
 
-## Daikon's vs `repOK()` Invariants
+2. **`(return == false) ==> (this.score == orig(this.score))`** (Poscondición en `moveDown()`, Línea 819)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Esta poscondición aplica tanto a `moveDown()` como al resto de los métodos de movimiento (`move`). Define formalmente que, si la operación de movimiento retorna `false` (indicando que el tablero no sufrió cambios), el puntaje no debe modificarse y debe conservarse idéntico a su valor previo a la ejecución.
 
+3. **`this.score >= orig(this.score)`** (Poscondición en `mergeAdjacentEqualsCells`, Línea 795)
+   - **Clasificación:** Muy útil.
+   - **Razonamiento:** Al intentar fusionar celdas adyacentes, el puntaje aumentará si son compatibles, y se mantendrá igual si no lo son. Por lo tanto, el puntaje final siempre será mayor o igual al original. Es una poscondición fuerte que también se propaga a los métodos de movimiento general, ya que estos hacen uso interno de esta función de mezcla.
 
-##
+4. **`this.size >= size(merged[])`** (Invariante en `padWithEmptyCells`, Línea 962)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Establece que la longitud del arreglo de celdas fusionadas (`merged[]`) será siempre menor o igual al tamaño del lado del tablero. Esto es lógicamente correcto: al partir de una colección del tamaño máximo (`this.size`), la acción de fusionar elementos reduce la cantidad resultante y, en el peor de los casos (sin fusiones), el tamaño se mantiene igual.
+
+5. **`this.size == size(rowList[])`** (Precondición en `removeEmptyCells`, Línea 990)
+   - **Clasificación:** Útil.
+   - **Razonamiento:** Exige que la lista pasada como parámetro (`rowList[]`) tenga una longitud exactamente igual a la dimensión del tablero. Esto es fundamental para garantizar que el algoritmo esté contemplando la fila o columna en su totalidad, evitando procesamientos incompletos o estados inconsistentes.
+
+## Invariantes de Inferidos: Clase `Cell`
+
+1. **`this.value >= 0`** (Invariante de objeto en `Cell`, Línea 1262)
+
+- **Clasificación:** Útil.
+- **Razonamiento:** Asegura que el valor numérico almacenado en cualquier instancia de celda nunca sea negativo, acotando el dominio válido a `0` (celda vacía) o valores positivos. Resulta fundamental para sostener el invariante de representación (`repOk`) de `Cell`
+
+2. **`(return == true) <==> (this.value == other.value)`** (Poscondición en `canMergeWith(Cell)`, Línea 1288)
+
+- **Clasificación:** Muy útil.
+- **Razonamiento:** Formaliza mediante una doble implicación el contrato central de compatibilidad entre dos celdas: pueden fusionarse si y solo si poseen exactamente el mismo valor. Esto evita fusiones inválidas entre fichas distintas o con celdas vacías.
+
+3. **`this.value == other.value`** (Precondición en `mergeWith(Cell)`, Línea 1396)
+
+- **Clasificación:** Útil.
+- **Razonamiento:** Exige como requisito previo a la ejecución de `mergeWith` que ambas celdas tengan el mismo valor. Establece el contrato defensivo del método, asegurando que nunca se intente combinar dos fichas incompatibles o vacías.
+
+4. **`2 * this.value - return.value == 0`** (Poscondición en `mergeWith(Cell)`, Línea 1411)
+
+- **Clasificación:** Muy útil.
+- **Razonamiento:** Especifica algebraicamente el comportamiento aritmético exacto de la fusión: el valor de la nueva celda retornada (`return.value`) debe ser estrictamente el doble del valor de las celdas originales (`2 * this.value`).
+
+5. **`(this.value == 0) <==> (return == true)`** (Poscondición en `isEmpty()`, Línea 1381)
+
+- **Clasificación:** Útil.
+- **Razonamiento:** Define de forma bicondicional el criterio de vacuidad de una celda, estableciendo una equivalencia exacta entre el estado interno (`this.value == 0`) y el resultado booleano del método observador (`isEmpty()`). Asimismo, en el caso negado (`not(return == true)`, línea 1391) garantiza que toda celda no vacía contiene un valor que es potencia de 2 (`this.value is a power of 2`).
+
+## Daikon vs `repOK()`
+
+En la mayoría de los casos daikon no pudo generar buenos invariantes, o descubir invariantes significativos que no hayamos contemplado antes en el `repOK()`. En ocaciones se ve sesgado por falta de trazas que exploren situaciones limites o interazantes de la partida ya que no contamos con métodos sofisticados para conseguirlas como métodos de busqueda por adversario y otros métodos por el estilo, por ejemplo, es muy dificil (imposible) encontrar una traza ganadora a partir de una heuristica random como la que provee el fuzzer.
+
+## Daikon vs. Manual and Automated Test Oracles
+
+Randoop y EvoSuite fueron los métodos que más destacaron para la generación de oráculos en este proyecto.
+
+Randoop nos permitío encontrar la mayor cantidad de bugs en el código, pero generó muchos tests dificiles de entender y a veces carentes de sentido.
+
+EvoSuite nos permitió mejorar las métricas de nuestros tests como la cobertura de lineas o la de mutantes. Si bien no expuso bugs significativos, debido a que previamente usamos Randoop, los tests que generó fueron más finos y entendibles.
+
+## Actualizaciones en el `repOK()` basadas en la salida de Daikon
+
+Solo actualizamos el `repOK()` de la calse `Board` con un invariante de clase:
+
+[`this.score >= 0`](daikon-output.txt#L11)
+
+Agregado al repOK() como:
+
+```java
+    public boolean repOK() {
+        //...
+        if (score < 0) {
+            return false;
+        }
+        //...
+        return true;
+    }
+
+```
