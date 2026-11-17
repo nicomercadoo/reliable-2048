@@ -1,47 +1,53 @@
 package ar.edu.unrc.game2048;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 public class CellTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNegativeCell() {
-        new Cell(-1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNoPowerCell() {
-        new Cell(3);
+    @Test
+    void testNegativeCell() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Cell(-1);
+        });
     }
 
     @Test
-    public void testCellValueZero() {
+    void testNoPowerCell() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Cell(3);
+        });
+    }
+
+    @Test
+    void testCellValueZero() {
         Cell cell = new Cell(0);
         assertTrue(cell.repOK());
-        assertEquals(0, cell.getValue());
+        assertEquals(cell.getValue(), 0);
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         boolean resultado = Cell.EMPTY.isEmpty();
         assertTrue(resultado);
     }
 
     @Test
-    public void testGetValue() {
+    void testGetValue() {
         Cell cell = new Cell(2);
         int resultado = cell.getValue();
         assertTrue(cell.repOK());
-        assertEquals(2, resultado);
+        assertEquals(resultado, 2);
     }
 
     @Test
-    public void testCanMergeWith() {
+    void testCanMergeWith() {
         Cell cell1 = new Cell(2);
         Cell cell2 = new Cell(2);
         Cell cell3 = new Cell(4);
@@ -54,20 +60,23 @@ public class CellTest {
     }
 
     @Test
-    public void testMergeWith() {
+    void testMergeWith() {
         Cell cell = new Cell(2);
         Cell resultado = cell.mergeWith(new Cell(2));
-        assertEquals(new Cell(4), resultado);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testMergeWithException() {
-        Cell cell = new Cell(2);
-        cell.mergeWith(new Cell(0));
+        assertEquals(resultado, new Cell(4));
     }
 
     @Test
-    public void testEquals() {
+    void testMergeWithException() {
+        Cell cell = new Cell(2);
+        assertThrows(IllegalArgumentException.class, () -> {
+            cell.mergeWith(new Cell(0));
+        });
+
+    }
+
+    @Test
+    void testEquals() {
         Cell cell1 = new Cell(2);
         Cell cell2 = new Cell(2);
         Cell cell3 = new Cell(4);
@@ -84,7 +93,7 @@ public class CellTest {
     }
 
     @Test
-    public void testHash() {
+    void testHash() {
         Cell cell1 = new Cell(2);
         Cell cell2 = new Cell(2);
         Cell cell3 = new Cell(4);
@@ -94,19 +103,20 @@ public class CellTest {
     }
 
     @Test
-    public void testToStringZero() {
-        assertEquals(".", Cell.EMPTY.toString());
+    void testToStringZero() {
+        assertEquals(Cell.EMPTY.toString(), ".");
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         Cell cell = new Cell(2);
-        assertEquals("2", cell.toString());
+        assertEquals(cell.toString(), "2");
     }
 
     @Test
-    public void testRepOK() {
+    void testRepOK(){
         Cell cell = new Cell(1073741824);
         assertTrue(cell.repOK());
     }
+
 }
