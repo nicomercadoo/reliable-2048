@@ -616,12 +616,15 @@ public class Board {
                 }
             }
         }
+        if (score < 0) {
+            return false;
+        }
         return true;
     }
 
     // ==================== INNER CLASSES ====================
 
-    
+
 
     /**
      * Represents a position on the board.
