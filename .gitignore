@@ -32,3 +32,6 @@ target/
 
 #python
 __pycache__
+
+#api-key
+api_key.py
